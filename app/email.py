@@ -9,7 +9,6 @@ def send_email(subject, recipients, text_body, html_body, sender=None):
     msg = Message(subject, recipients=recipients, sender=sender)
     msg.body = text_body
     msg.html = html_body
-
     @copy_current_request_context
     def send(msg):
         mail.send(msg)
