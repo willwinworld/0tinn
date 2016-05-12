@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 class config():
-    DEBUG = True
-    BOOTSTRAP_SERVE_LOCAL = True
+    DEBUG = False
 
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:boxiao@localhost:3306/ms?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

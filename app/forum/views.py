@@ -19,7 +19,6 @@ def index():
     session['online_nums'] = get_online_user_nums()
     session["highest_online_num"] = highest_online_number()
     hot_topics = Topic.get_hot()
-    print(hot_topics)
     new_topics = Topic.get_topic(1, "new")
     cn_topics = Topic.get_topic(1, "cn")
     en_topics = Topic.get_topic(1, "en")
