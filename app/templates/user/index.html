@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-7 col-lg-offset-1">
+                <!--Message-->
+                <div class="panel panel-default">
+                    <ul class="nav nav-tabs" id="myTabs">
+                        {% if current_user.username == user.username %}
+                        <li><a href="#msg" data-toggle="tab" aria-expanded="true">提醒</a></li>
+                        {% endif %}
+                        <li class="active"><a href="#article" data-toggle="tab" aria-expanded="false">主题</a></li>
+                        <li><a href="#comment" data-toggle="tab" aria-expanded="false">评论</a></li>
+                        {% if current_user.username == user.username %}
+                        <li><a href="#pri-letter" data-toggle="tab" aria-expanded="false">私信</a></li>
+                        {% endif %}
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                     {% if current_user.username == user.username %}
+                        <div class="tab-pane fade" id="msg">
+                            <ul class="list-group">
+                            {% if msg %}
+                                {% for m in msg %}
+                                      <li class="list-group-item cell">
+                                      <div class="pull-right"><i class="fa fa-times" aria-hidden="true" role="button" id="msg-{{ m.id }}" onclick="del_msg({{ m.id }})"></i></div>
+                                          {% if m.topic_id is not none %}<a href="/topic/{{ m.topic_id }}"{% else %}<span role="button" {% endif %} id="msg-a-{{ m.id }}"
+                                             onclick="{% if m.topic_id is not none %}read_msg({{ m.id }});{% else %}chang_tab({{ m.id }});{% endif %}" >
+                                              <h6 class="list-group-item-heading">
+                                                {% if m.unread %}<i class="fa fa-commenting"></i>{% endif %} {{ m.content }}
+                                              </h6>
+                                          {% if m.topic_id is not none %}
+                                          </a>
+                                        {% else %}
+                                        </span>
+                                      {% endif %}
+                                          <p class="list-group-item-text text-muted small">{{ m.date_created }}</p>
+                                      </li>
+                                {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item">没有任何提醒</li>
+                            {% endif %}
+                            </ul>
+                          </div>
+                    {% endif %}
+                        <div class="tab-pane fade active in" id="article">
+                            <div class="list-group">
+                                {% for t in topics %}
+                                  <a href="/topic/{{ t.id }}" class="list-group-item">
+                                    <div class="badge pull-right">{{ t.reply_num }}</div>
+                                    <h5 class="list-group-item-heading">{{ t.title }}</h5>
+                                        {% if t.last_reply %}
+                                            <p class="list-group-item-text">在 {{ t.last_active }} ,{{ t.last_reply }} 回复了此主题</p>
+                                        {% endif %}
+                                  </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="comment">
+                            <ul class="list-group">
+                                {% if replies %}
+                                    {% for r in replies %}
+                                        <li class="list-group-item">
+                                            <div class="pull-right">{{ moment(r.date_created, local=True).fromNow() }}</div>
+                                            <h6 class="list-group-item-heading">{{ r.content | safe }}</h6>
+                                        <p class="list-group-item-text">回复了<a href="/member/{{ r.get_topic().username }}">{{ r.get_topic().username }}</a> 创建的
+                                            <a href="/topic/{{ r.topic_id }}">"{{ r.get_topic().title }}"</a>主题</p>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                <li class="list-group-item">暂未发表任何评论</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% if current_user.username == user.username %}
+                        <div class="tab-pane fade" id="pri-letter">
+                            <ul class="list-group">
+                                {% if letters %}
+                                    {% for l in letters %}
+                                        <li class="list-group-item">
+                                            <div class="pull-right" role="button" id="letter-{{ l.id }}" onclick="del_letter({{ l.id }})">&times;</div>
+                                            <h5 class="list-group-item-heading">{{ l.content }}</h5>
+                                            <p class="list-group-item-text">来自 <a href="/member/{{ l.username }}">{{ l.username }}</a>,{{ moment(l.date_created, local=True).fromNow() }}</p>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item">没有任何私信</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    </div>
+            </div>
+                <!--Attention-->
+                <div class="panel panel-default">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#collect-article" data-toggle="tab" aria-expanded="true">收藏的主题</a></li>
+                        <li class=""><a href="#following" data-toggle="tab" aria-expanded="false">{% if current_user.is_authenticated and current_user.username == user.username %}我{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}他{% else %}她{% endif %}关注的人</a></li>
+                        <li class=""><a href="#follower" data-toggle="tab" aria-expanded="false">关注{% if current_user.is_authenticated and current_user.username == user.username %}我{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}他{% else %}她{% endif %}的人
+                        </a></li>
+                    </ul>
+                     <div id="myTabContent" class="tab-content">
+                         <!-- Collect articles -->
+                        <div class="tab-pane fade active in" id="collect-article">
+                            <ul class="list-group">
+                                {% if user.collect_topic_num > 0 %}
+                                    {% for t in like_topics %}
+                                          <li class="list-group-item cell">
+                                          <div class="media">
+                                              <div class="media-left">
+                                                  <a href="/member/{{ t.user_id }}">
+                                                      <img class="media-object" src="{{ t.get_user().avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
+                                                  </a>
+                                              </div>
+                                              <div class="media-body">
+                                                    <a href="/topic/{{ t.id }}"><h5 class="media-heading">{{ t.title }}</h5></a>
+                                                    <p>
+                                                        <span class="label label-primary">{{ t.label }}</span>&nbsp; &hearts; &nbsp;
+                                                        <strong>{{ t.username }}</strong>&nbsp; &hearts; &nbsp;
+                                                        <span class="text-muted">{{ moment(t.date_created, local=True).fromNow() }}</span>&nbsp; &bull; &nbsp;
+                                                        {% if t.last_reply %}
+                                                        <span class="text-muted">最后的回复来自<strong>{{ t.last_reply }}</strong></span>
+                                                        {% endif %}
+                                                    </p>
+                                             </div>
+                                              <div class="media-right">
+                                                  <span class="badge">{{ t.reply_num }}</span>
+                                              </div>
+                                          </div>
+                                      </li>
+                                    {% endfor %}
+                                    {% else %}
+                                    <li class="list-group-item">暂未收藏任何主题</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                         <!-- Following person -->
+                        <div class="tab-pane fade" id="following">
+                            <ul class="list-group">
+                                {% if user.following_num > 0 %}
+                                    {% for f in user.get_following() %}
+                                        <li class="list-group-item cell">
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="/member/{{ f.username }}"><img class="media-object" src="{{ f.avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;"></a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">{{ f.username }}</h5>
+                                                    {% if f.signature %}
+                                                    <p class="text-muted">{{ f.signature }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                <li class="list-group-item">暂未关注任何人</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                         <!-- Follower -->
+                        <div class="tab-pane fade" id="follower">
+                            <ul class="list-group">
+                                {% if user.follower_num > 0 %}
+                                    {% for u in user.get_follower() %}
+                                        <li class="list-group-item cell">
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="/member/{{ u.username }}"><img class="media-object" src="{{ u.avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;"></a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">{{ u.username }}</h5>
+                                                    {% if u.signature %}
+                                                        <p class="text-muted">{{ u.signature }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                <li class="list-group-item"> 暂未有任何人关注</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Side-->
+            <div class="col-md-4">
+                <div class="thumbnail">
+                      <img src="{{ user.avatar }}" alt="{{ user.username }}" style="height: 160px ; width: 160px" class="img-thumbnail">
+                      <div class="caption" align="center">
+                        <h4>{{ user.username }}</h4>
+                          {% if user.signature %}
+                            <p>{{ user.signature }}</p>
+                          {% endif %}
+                          <!-- Button trigger modal -->
+                      {% if current_user.is_authenticated %}
+                        {% if current_user.username != user.username %}
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                              发送私信
+                            </button>
+                            <button type="button" class="btn btn-primary" id="follow_btn" onclick="follow()">加入关注</button>
+                        {% endif %}
+                      {% endif %}
+                          <hr>
+                        <p>STBMYL第<strong>{{ user.id }}</strong>位成员</p>
+                        <p>加入于 <strong>{{ user.date_joined }}</strong></p>
+                        <p><i class="fa fa-{{ user.gender }}"></i></p>
+                        <p>目前连续签到<strong> {{ user.continuous_check_in }}</strong> 天，最长连续签到 <strong>{{ user.longest_check_in }}</strong> 天</p>
+                        <p>总签到 <strong>{{ user.total_check_in }}</strong> 天</p>
+                      <hr>
+                          <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                              <tbody>
+                                <tr>
+                                    <td width="33%" align="center"><h5>{{ user.collect_topic_num }}</h5><span class="text-muted">收藏的主题</span></td>
+                                    <td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><h5>{{ user.following_num }}</h5><span class="text-muted">{% if current_user.is_authenticated and current_user.username == user.username %}我{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}他{% else %}她{% endif %}关注的人</span></td>
+                                    <td width="33%" align="center"><h5>{{ user.follower_num }}</h5><span class="text-muted">关注{% if current_user.is_authenticated and current_user.username == user.username %}我{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}他{% else %}她{% endif %}的人</span></td>
+                                </tr>
+                            </tbody>
+                          </table>
+                      </div>
+                </div>
+            </div>
+    </div>
+        </div>
+    <div class="sep20"></div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">发送到:{{ user.username }}</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal form-custom">
+                <div class="form-group">
+                    {{ form.content(class="form-control") }}
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" onclick="send_letter()" id="send-button">发送</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(document).ready(function () {            $.ajax({                url: "/follow?u_id=" + {{ user.id }},                type: "GET",                data: {"action": "is_followed"},                success: function (msg) {                    if (msg == "yes") {                        $("#follow_btn").text("取消关注")                    }                }            });        });        function send_letter() {            $("#send-button").html("<i class=\"fa fa-spinner fa-pulse fa-1x fa-fw margin-bottom\"></i><span class=\"sr-only\">Loading..</span>");            $("#send-button").addClass("disabled");            var content = $("#content").val();            $.ajax({                url: "/letter",                type: "POST",                data: {"content": content, "userId": "{{ user.id }}"},                success: function(msg) {                    alert(msg.info)                }            });            $("#send-button").html("发送").removeClass("disabled")        };        function del_msg(m_id) {            $.ajax({                url: "/message/" + m_id,                type: "POST",                data: {"action": "delete"},                success: function() {                    $("#msg-" + m_id).parent().parent().fadeOut(1000)                }            })        };        function read_msg(m_id) {            $.ajax({                url : "/message/" + m_id,                type: "POST",                data: {"action": "readed"}            })        };    function del_letter(l_id) {        $.ajax({            url: "/letter",            type: "GET",            data: {"action": "delete","letter_id":l_id},            success:function() {                    $("#letter-" + l_id).parent().fadeOut(1000)                }        })    };    function test() {        $("#myTabs a:last").tab("show");    };    function chang_tab(id) {        $("#myTabs a:last").tab("show");        read_msg(id);    };    function follow(){        var x = $("#follow_btn").html();        if (x =="加入关注") {            $.ajax({                url: "/follow?u_id=" + {{ user.id }},                type: "GET",                data: {"action": "follow"},                success: function () {                    $("#follow_btn").text("关注成功")                }            })        }else {            $.ajax({                url: "/follow?u_id=" + {{ user.id }},                type: "GET",                data: {"action": "unsubscribe"},                success: function (msg) {                    $("#follow_btn").text(msg)                }            })        }    };
+    </script>
+{% endblock %}

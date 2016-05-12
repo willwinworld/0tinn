@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="sep20"></div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+        <form class="form-horizontal form-custom" action="/post" method="post">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>分享</legend>
+                <div class="form-group">
+                    {{ form.title.label(class='col-md-2 control-label') }}
+                    <div class="col-md-10">
+                        {{ form.title(class='form-control', placeholder='Title') }}
+                    </div>
+                     {% if form.title.errors %}
+                        {% for error in form.title.errors %}
+                            <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.label.label(class='col-md-2 control-label') }}
+                    <div class="col-md-10">
+                        {{ form.label(class='form-control') }}
+                    </div>
+                     {% if form.label.errors %}
+                        {% for error in form.label.errors %}
+                            <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.music_chain.label(class='col-md-2 control-label') }}
+                    <div class="col-md-8">
+                        {{ form.music_chain(class='form-control', placeholder='Music outchain') }}
+                    </div>
+                    <div class="col-md-2"> <a href="/how"><i class="fa fa-question fa-2x" aria-hidden="true"></i> <span class="small"> 不清楚？</span></a></div>
+                     {% if form.music_chain.errors %}
+                        {% for error in form.music_chain.errors %}
+                            <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.content.label(class='col-md-2 control-label') }}
+                    <div class="col-md-10">
+                        {{ form.content(class='form-control', placeholder='Content',style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%",rows='4',maxlength='10000') }}
+                    </div>
+                     {% if form.content.errors %}
+                        {% for error in form.content.errors %}
+                            <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                    {{ form.submit(class="btn btn-default") }}
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+{% endblock %}

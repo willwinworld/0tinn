@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="sep20"></div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td class="control-label" width="5%"><strong>email:</strong></td>
+                    <td><input type="text" name="email" class="form-control" id="email"></td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick="send()" id="send">发送</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        function send(){$("#send").html('<i class="fa fa-spinner fa-pulse fa-1x fa-fw margin-bottom"></i> <span class="sr-only">Loading..</span>');$("#send").addClass("disabled");$.ajax({url:"/forget?email="+$("#email").val(),type:"GET",success:function(msg){alert(msg);$("#send").html("已发送").removeAttr("onclick")},error:function(msg){alert("发送失败")}})};
+    </script>
+{% endblock %}

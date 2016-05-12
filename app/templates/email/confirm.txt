@@ -1,0 +1,6 @@
+Dear {{ user.username }}:
+欢迎注册0tinn!
+激活邮箱请点击下面链接:
+{{ url_for('members.confirm', token=token, _external=True) }}
+Sincerely,
+Tallone

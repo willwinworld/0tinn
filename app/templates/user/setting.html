@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="sep20"></div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+    <form method="post" class="form-horizontal form-custom">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend>设置</legend>
+            <div class="form-group">
+                <div class="control-label col-lg-2">用户名</div>
+                <div class="control">
+                    <div class="col-lg-10"><strong>{{ current_user.username }}</strong></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-label col-lg-2">邮箱</div>
+                <div class="control">
+                    <div class="col-lg-10">
+                        <div class="pull-right">
+                            {% if current_user.is_confirmed %}
+                                <div class="label label-success">已验证</div>
+                            {% else %}
+                                <div class="label label-danger" role="button" onclick="confirm()">未验证</div>
+                            {% endif %}
+                        </div>
+                        <strong>{{ current_user.email }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                    {{ form.gender.label(class='control-label col-lg-2') }}
+                    <div class="col-lg-10">
+                        {% for gd in form.gender %}
+                            {{ gd.label }}
+                            {% if current_user.gender in gd.label | string %}
+                                {{ gd(checked='checked') }}
+                            {% else %}
+                                {{ gd }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+            </div>
+            <div class="form-group">
+                {{ form.signature.label(class='col-lg-2 control-label') }}
+                <div class="col-lg-10">
+                    {% if current_user.signature %}
+                        <textarea class="control" id="signature" maxlength="10000" name="signature" rows="4" style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%" >{{ current_user.signature }}</textarea>
+                    {% else %}
+                        {{ form.signature(class='form-control', placeholder='Signature', style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%",rows='4',maxlength='10000') }}
+                    {% endif %}
+                </div>
+            </div>
+        <div class="form-group">
+            <div class="col-lg-2 control-label">当前头像</div>
+            <div class="col-lg-10 control">
+                <div >
+                    <img src="{{ current_user.avatar }}" style="width: 73px; height: 73px">
+                </div>
+            </div>
+        </div>
+            <div class="form-group">
+                {{ form.avatar.label(class='control-label col-lg-2') }}
+                <div class="col-lg-10">
+                    {{ form.avatar(class='form-control', placeholder='Image url here') }}
+                </div>
+                {% if form.avatar.errors %}
+                    {% for error in form.avatar.errors %}
+                        <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="col-lg-offset-2 col-lg-10 text-muted">
+                    <p>关于头像的规则</p>
+                    <ul >
+                        <li>禁止使用任何低俗或者敏感图片作为头像</li>
+                        <li>如果你是男的，请不要用女人的照片作为头像</li>
+                    </ul>
+                </div>
+        <div class="form-group ">
+            <div class="col-lg-offset-2 col-lg-10">
+                {{ form.submit(class='btn btn-default') }}
+            </div>
+        </div>
+        </fieldset>
+    </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        function confirm(){$.ajax({url:"/send_confirm/{{ current_user.id }}",type:"POST",success:function(msg){alert("发送成功,不要忘记查看垃圾邮件.");$(".label-danger").text("已发送").removeAttr("onclick")},error:function(msg){alert("发送失败")}})};
+    </script>
+{% endblock %}

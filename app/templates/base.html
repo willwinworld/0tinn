@@ -1,0 +1,176 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}
+    0Tinn, 聆听 -- 一个用心分享音乐的社区
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static',filename='css/my.css') }}" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="icon" href="{{ url_for("static", filename="favicon.ico") }}">
+    {{ moment.include_jquery(version='3.0.0-alpha1', local_js="http://libs.cdnjs.net/jquery/3.0.0-alpha1/jquery.min.js") }}
+    {{ moment.include_moment(version='2.12.0', local_js="http://libs.cdnjs.net/moment.js/2.12.0/moment.min.js") }}
+{% endblock %}
+{% block navbar %}
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/">0Tinn</a>
+            </div>
+              <div class="row">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+                  <div class="collapse navbar-collapse" id="navbar-collapse-1">
+              <ul class="nav navbar-nav col-md-2">
+                <li><a href="/">首页<span class="sr-only"></span></a></li>
+              </ul>
+                  <form class="navbar-form navbar-left" role="search" action="/search" method="post">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Search" name="search_text">
+                    </div>
+                    <button type="submit" class="btn btn-default">搜索</button>
+                  </form>
+              <ul class="nav navbar-nav navbar-right">
+                  {% if current_user.is_authenticated %}
+                      <li><a href="/member/{{ current_user.username }}">{{ current_user.username }}</a></li>
+                      <li><a href="/setting">设置</a></li>
+                      <li><a href="/signout">登出</a></li>
+                  {% else %}
+                      <li><a href="/login">登录</a> </li>
+                      <li><a href="/signup">注册</a></li>
+                  {% endif %}
+              </ul>
+            </div><!-- /.navbar-collapse -->
+              </div>
+          </div><!-- /.container-fluid -->
+        </nav>
+{% endblock %}
+{% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+    <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-7 col-md-offset-1">
+                {% block main -%}{%- endblock %}
+                </div>
+                <!-- Side bar -->
+                <div class="col-md-3">
+                <div class="sep20"></div><div class="sep20"></div>
+                {% if current_user.is_authenticated %}
+                 <div class="panel panel-default">
+                  <div class="panel-body">
+                    <div class="media">
+                      <div class="media-left">
+                        <a href="/member/{{ current_user.username }}">
+                            <img class="media-object" src="{{ current_user.avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
+                        </a>
+                      </div>
+                      <div class="media-body">
+                        <h5 class="media-heading">{{ current_user.username }}</h5>
+                          <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                              <tbody>
+                                <tr>
+                                    <td width="33%" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>{{ session.get('my_topic_num') }}</h5><span class="text-muted">我的主题</span></a></td>
+                                    <td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>0</h5><span class="text-muted">主题收藏</span></a></td>
+                                    <td width="33%" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>{{ session.get("following_nums") }}</h5><span class="text-muted">特别关注</span></a></td>
+                                </tr>
+                            </tbody>
+                          </table>
+                      </div>
+                    </div>
+                          <hr>
+                          <h5><a href="/post"><i class="fa fa-pencil" aria-hidden="true">新分享</i></a></h5>
+                          <hr>
+                          <a href="/member/{{ current_user.username }}"> {{ session.get("msg_num") }} 条未读提醒</a>
+                      {% if current_user.is_check_in %}
+                          <a href="/balance"><span class="pull-right"><strong>{{ current_user.wealth }}</strong> <i class="fa fa-music" aria-hidden="true"></i></span></a>
+                      {% else %}
+                          <button class="btn-default btn pull-right" onclick="check_in()">签到</button>
+                      {% endif %}
+                  </div>
+                </div>
+                 {% else %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="text-muted"> 注册更精彩</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="text-center">
+                                <a href="/signup"><button class="btn btn-default">现在注册</button> </a>
+                                <p></p>
+                                <p>已是注册用户请 <a href="/login">登录</a> </p>
+                            </div>
+                        </div>
+                    </div>
+                 {% endif %}
+                {% block side -%}{%- endblock %}
+                <div class="panel panel-default">
+        <div class="panel-heading">
+            <sapn class="text-muted">社区运行现状</sapn>
+        </div>
+        <div class="panel-body">
+            <table class="table table-condensed" border="0">
+                <tbody>
+                    <tr>
+                        <td>注册会员</td>
+                        <td><strong>{{ session.get("member_num") }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>主题数</td>
+                        <td><strong>{{ session.get("topic_num") }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>回复数</td>
+                        <td><strong>{{ session.get("reply_num") }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+{% block footer %}
+<div class="footer">
+        <div class="container">
+        <div class="row">
+            <div class="col-md-1 col-md-offset-2"><a href="/about">关于</a> </div>
+            <div class="col-md-1"><a href="/faq">FAQ</a></div>
+            <div class="col-md-1 hidden"><a href="/advertise">广告投放</a> </div>
+            <div class="col-md-2"><span><strong>{{ session.get("online_nums") }}</strong>人在线</span>&nbsp;<span class="text-muted small">最高记录 {{ session.get("highest_online_num") }}人</span></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-md-offset-2">Copyright &copy; 2016 0Tinn. All rights reserved.</div>
+            <div class="col-md-3 text-muted"><i class="fa fa-music"></i> Do what you want do, and do it better. <i class="fa fa-music"></i> </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="http://static.geetest.com/static/tools/gt.js"></script>
+    <script>
+        function check_in() {
+                $.ajax({
+                    url: "/check-in",
+                    type: "GET",
+                    success: function (msg) {
+                        alert(msg["info"])
+                        location.reload()
+                    }
+                })
+            }
+    </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="sep20"></div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+    <form method="POST" class="form-horizontal form-custom" action="/reset_pw/{{ r_email }}/{{ r_token }}">
+        <fieldset>
+            <legend>重新设置密码</legend>
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.password.label(class='control-label col-lg-2') }}
+                <div class="col-lg-10 {% if form.password.errors %} has-error {% endif %}">
+                    {{ form.password(class='form-control', placeholder='Password') }}
+                </div>
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label(class='control-label col-lg-2') }}
+                <div class="col-lg-10">
+                    {{ form.confirm_password(class='form-control', placeholder='Confirm Password') }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div id="embed-captcha"></div>
+                <p id="wait" class="show">正在加载验证码......</p>
+                <p id="notice" class="hide">请先拖动验证码到相应位置</p>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    {{ form.submit(class='btn btn-primary', id='embed-submit') }}
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+    var handlerEmbed=function(captchaObj){$("#embed-submit").click(function(e){var validate=captchaObj.getValidate();if(!validate){$("#notice")[0].className="show";setTimeout(function(){$("#notice")[0].className="hide"},2000);e.preventDefault()}});captchaObj.appendTo("#embed-captcha");captchaObj.onReady(function(){$("#wait")[0].className="hide"})};$.ajax({url:"/register?t="+(new Date()).getTime(),type:"get",dataType:"json",success:function(data){initGeetest({gt:data.gt,challenge:data.challenge,product:"embed",offline:!data.success},handlerEmbed)}});
+    </script>
+{% endblock %}

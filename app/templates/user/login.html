@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="sep20"></div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+    <form method="POST" class="form-horizontal form-custom" action="/login">
+        <fieldset>
+            <legend>登录</legend>
+            <div class="form-group">
+                {{ form.hidden_tag() }}
+                {{ form.email.label(class='control-label col-lg-2') }}
+                <div class="col-lg-10 {% if form.email.errors %} has-error {% endif %}">
+                    {{ form.email(class='form-control', placeholder='Email or Username') }}
+                </div>
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                        <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class='control-label col-lg-2') }}
+                <div class="col-lg-10 {% if form.password.errors %} has-error {% endif %}">
+                    {{ form.password(class='form-control', placeholder='Password') }}
+                </div>
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                    {{ form.remeber_me.label(class='control-label col-lg-2') }}
+                    <div class="col-lg-10">
+                        {{ form.remeber_me(class='form-control') }}
+                    </div>
+                </div>
+            <div class="form-group">
+                <div id="embed-captcha"></div>
+                <p id="wait" class="show">正在加载验证码......</p>
+                <p id="notice" class="hide">请先拖动验证码到相应位置</p>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    {{ form.submit(class='btn btn-primary') }}
+                    <div class="pull-right">没有账号？<a href="/login">注册</a>,<a href="/forget">忘记密码？</a> </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+    var handlerEmbed=function(captchaObj){$("#embed-submit").click(function(e){var validate=captchaObj.getValidate();if(!validate){$("#notice")[0].className="show";setTimeout(function(){$("#notice")[0].className="hide"},2000);e.preventDefault()}});captchaObj.appendTo("#embed-captcha");captchaObj.onReady(function(){$("#wait")[0].className="hide"})};$.ajax({url:"/register?t="+(new Date()).getTime(),type:"get",dataType:"json",success:function(data){initGeetest({gt:data.gt,challenge:data.challenge,product:"embed",offline:!data.success},handlerEmbed)}});
+    </script>
+{% endblock %}

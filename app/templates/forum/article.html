@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% import "_macros.html" as macro %}
+
+{% block main %}
+    <div class="sep20"></div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <!-- Personalized signature-->
+          <span class="label pull-right label-danger"><span id="vote-num"> {{ topic.liked_num }} </span>&nbsp;<i class="fa fa-heart-o" aria-hidden="true"></i></span>
+        <div class="text-muted">{% if topic.get_user().signature %}{{ topic.get_user().signature }}{% endif %}</div>
+        <!--Article header-->
+        <div class="page-header">
+            <span class="pull-right">
+            <a href="#">
+                <img class="media-object" src="{{ topic.get_user().avatar }}" data-holder-rendered="true" style="width: 73px; height: 73px;">
+            </a>
+           </span>
+          <h4>{{ topic.title }}</h4>
+            <button type="button" class="btn btn-sm btn-info" id="vote-button"><i class="fa fa-heartbeat" aria-hidden="true"> Like</i></button>&nbsp;<a href="#">{{ topic.username }}</a>&nbsp;&bull;&nbsp;<span class="text-muted">{{ topic.date_created }}</span> &nbsp;&bull;&nbsp;{{ topic.click_rate }}次点击
+        </div>
+          <!--Article content-->
+            <!-- Netease Cloud Music -->
+                {{ topic.music_chain | safe }}
+
+          <p>{{ topic.content | markdown }}</p>
+            {% if current_user.username == topic.username %}
+          <hr>
+          <div class="col-md-offset-10 col-md-2">
+              <a href="/edit/t/{{ topic.id }}"><button class="btn-default btn">编辑</button></a>
+          </div>
+      {% endif %}
+      </div>
+    </div>
+    <div class="sep20"></div>
+    <div class="panel panel-default">
+            <ul class="list-group reply-list">
+                <li class="list-group-item reply-header small">
+                    <strong>{{ pagination.total }} 回复
+                        {% if pagination.total > 0 %}
+                        <span class="text-muted">&nbsp;|&nbsp;
+                                直到 {{ topic.last_active }}
+                        </span>
+                        {% endif %}
+                    </strong>
+                </li>
+                {% for i in pagination.items %}
+                <li class="list-group-item reply">
+                    <span class="badge pull-right">#{{ i.topic_floor }}</span>
+                    <div class="media">
+                      <div class="media-left">
+                        <a href="/member/{{ i.get_user().username }}">
+                         <img class="media-object" src="{{ i.get_user().avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
+                        </a>
+                      </div>
+                        <div class="media-body">
+                            <span>
+                                <strong id="username">{{ i.get_user().username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ moment(i.date_created, local=True).fromNow() }}</span>
+                            </span>
+                            <p>
+                            {{ i.content | safe }}
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            {% if pagination.total > 100 %}
+                {{ macro.reply_pagination(pagination, topic.id) }}
+            {% endif %}
+            </ul>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    <div class="panel panel-default">
+        <form class="form-custom form-horizontal" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.content.label(class='control-label') }}
+            <div class="form-group">
+                <div class="col-lg-12">
+                    {{ form.content(class="form-control",style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%; height:112px",maxlength='10000') }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    {{ form.submit(class='btn btn-default') }}
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    <div class="sep20"></div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+    $(document).ready(function(){        $("#vote-button").click(function(){            $.ajax({            url: "/topic/" + "{{ topic.id }}",            type: "POST",            data: { "action": "add_vote"},            success: function(msg) {                if(msg['status']=="ok") {                    $("#vote-button").addClass("disabled");                    $(".fa-heartbeat").text(" +1");                    $("#vote-num").text({{ topic.vote + 1 }})                }                else {                    $("#vote-button").addClass("disabled");                    $(".fa-heartbeat").text(" 已经喜欢了哟");                }            }        })        });        {% if current_user.is_authenticated %}            var $button = $("<div id='reply-button' class='btn btn-xs'><i class='fa fa-reply' aria-hidden='true'></i></div>").click(function(){                var m = $(this).prev().find("#username").text();                $("#content").focus().text("@" + m + " ");          });          $(".reply").hover(function(){            $(this).append($button);            $button.show();          }, function(){            $button.hide();          });        {% endif %}    })
+    </script>
+{% endblock %}
