@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 
+
 class config():
     DEBUG = False
 

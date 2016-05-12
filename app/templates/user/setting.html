@@ -22,7 +22,7 @@
                             {% if current_user.is_confirmed %}
                                 <div class="label label-success">已验证</div>
                             {% else %}
-                                <div class="label label-danger" role="button" onclick="confirm()">未验证</div>
+                                <label class="label label-danger" role="button" onclick="confirm()">未验证</label>
                             {% endif %}
                         </div>
                         <strong>{{ current_user.email }}</strong>
@@ -88,7 +88,29 @@
 {% endblock %}
 
 {% block scripts %}
+    {{ super() }}
     <script type="text/javascript">
-        function confirm(){$.ajax({url:"/send_confirm/{{ current_user.id }}",type:"POST",success:function(msg){alert("发送成功,不要忘记查看垃圾邮件.");$(".label-danger").text("已发送").removeAttr("onclick")},error:function(msg){alert("发送失败")}})};
+        $(document).ready(function() {
+            if (document.cookie !="") {
+                $(".label-danger").text("等待60秒").removeAttr("onclick");
+            }
+        });
+        function confirm(){
+            if (document.cookie.split(";")[1] == null) {
+                $.ajax({
+                    url: "/send_confirm/{{ current_user.id }}",
+                    type: "POST",
+                    success: function () {
+                        alert("发送成功,不要忘记查看垃圾邮件.");
+                        $(".label-danger").text("已发送").removeAttr("onclick");
+                        var exp = new Date();
+                        document.cookie = "Sended=True; expires=" + exp.toUTCString();
+                    },
+                    error: function () {
+                        alert("发送失败")
+                    }
+                })
+            }
+        }
     </script>
 {% endblock %}
