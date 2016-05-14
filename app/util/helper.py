@@ -68,7 +68,7 @@ class Tietuku():
 
 def now_time():
     # 格式化时间
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now()
 
 
 def check_in_time_format(t):
