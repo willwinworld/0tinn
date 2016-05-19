@@ -163,7 +163,7 @@ def other():
 def search():
     if request.method == "POST":
         t = request.form.get('search_text')
-        url = 'https://www.google.com/search?q=site:ms.com ' + t
+        url = 'https://www.google.com/search?q=site:www.0tinn.com ' + t
         return redirect(url)
 
 
