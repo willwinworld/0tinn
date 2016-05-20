@@ -4,7 +4,7 @@ import requests
 import re
 import time
 from math import log2
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.extensions import redis_store
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
@@ -68,7 +68,9 @@ class Tietuku():
 
 def now_time():
     # 格式化时间
-    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    td = timedelta(hours=8)
+    t = datetime.utcnow() + td
+    return t
 
 
 def check_in_time_format(t):
