@@ -97,7 +97,7 @@
             }
         });
         function confirm(){
-            if (document.cookie.split(";")[1] == null) {
+            if (getCookie("Sender") == "") {
                 $.ajax({
                     url: "/send_confirm/{{ current_user.id }}",
                     type: "POST",
