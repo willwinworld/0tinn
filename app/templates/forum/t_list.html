@@ -5,7 +5,11 @@
     <div class="sep20"></div>
     <div class="sep20"></div>
     <ul class="list-group">
-        <li class="list-group-item cell"><strong>{% if label == "recent" %}近期{% elif label == "cn" %}华语{% elif label=="en" %}欧美{% elif label=="jk" %}日韩{% elif label=="ins" %}纯{% elif label=="other" %}其它{% endif %}音乐</strong></li>
+        <li class="list-group-item cell">
+        <div class="pull-right text-muted">
+           共{{ topics.total }}首
+        </div>
+            <a href="/">0Tinn</a> > <strong>{% if label == "recent" %}近期{% elif label == "cn" %}华语{% elif label=="en" %}欧美{% elif label=="jk" %}日韩{% elif label=="ins" %}纯音乐{% elif label=="other" %}其它{% endif %}</strong></li>
         {% for topic in topics.items %}
             <li class="list-group-item cell">
                 <div class="media">
@@ -35,30 +39,4 @@
     {% if topics.total > 30 %}
     {{ macro.topic_pagination(topics, label) }}
     {% endif %}
-{% endblock %}
-
-{% block side %}
-    <div class="panel panel-default">
-          <div class="panel-heading">
-            <sapn class="text-muted">{% if label == "recent" %}近期{% elif label == "cn" %}华语{% elif label=="en" %}欧美{% elif label=="jk" %}日韩{% elif label=="ins" %}纯{% elif label=="other" %}其它{% endif %}3日热议</sapn>
-          </div>
-          <div class="panel-body hot-panel">
-            <ul class="hot-list">
-              {% for i in range(5) %}
-                  <li>
-                    <div class="media">
-                       <div class="media-left">
-                          <a href="#">
-                               <img class="media-object" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTQxMjc0OTkyYyB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1NDEyNzQ5OTJjIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 24px; height: 24px;">
-                          </a>
-                      </div>
-                      <div class="media-body">
-                            <a href="/topic"><h6 class="media-heading">Media heading</h6></a>
-                     </div>
-                  </div>
-                  </li>
-              {% endfor %}
-            </ul>
-          </div>
-    </div>
 {% endblock %}

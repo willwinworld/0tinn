@@ -19,19 +19,18 @@ def index():
     session['online_nums'] = get_online_user_nums()
     session["highest_online_num"] = highest_online_number()
     hot_topics = Topic.get_hot()
-    new_topics = Topic.get_topic(1, "new")
-    cn_topics = Topic.get_topic(1, "cn")
-    en_topics = Topic.get_topic(1, "en")
-    jk_topics = Topic.get_topic(1, 'jk')
-    ins_topics = Topic.get_topic(1, 'ins')
-    other_topics = Topic.get_topic(1, "other")
-    topics = {"cn_list": cn_topics.items, 'jk_list': jk_topics.items, 'en_list': en_topics.items,
-                  'ins_list': ins_topics.items, 'ot_list': other_topics.items, 'new_list': new_topics.items}
+    tab = "new"
+    topics = Topic.get_topic(1, tab).items
+    if request.method == "GET":
+        t = request.args.get("tab")
+        if t is not None:
+            tab = t
+        topics = Topic.get_topic(1, tab).items
     if current_user.is_authenticated:
         session['my_topic_num'] = Topic.get_user_topic_num(username=current_user.username)
         session['msg_num'] = Message.get_user_unread_num(current_user.id)
         session['following_nums'] = current_user.following_num
-    return render_template('index.html', topics=topics, hot_topics=hot_topics)
+    return render_template('index.html', topics=topics, hot_topics=hot_topics, tab=tab)
 
 
 @forum.route('/topic/<int:id>', methods=['POST', 'GET'])
@@ -112,7 +111,7 @@ def edit(id):
     return render_template("forum/edit.html", form=form, topic=topic)
 
 
-@forum.route('/recent', methods=['GET', 'POST'])
+@forum.route('/new', methods=['GET', 'POST'])
 def recent():
     page = request.args.get("p")
     topics = Topic.get_topic(page, "new")
