@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="sep20"></div>
+        <div class="row">
+            <div class="col-md-7 col-md-offset-2">
+                <div class="panel panel-default box">
+                <div class="page-header">
+                    <h4><strong>{{ news.title }}</strong></h4>
+                </div>
+                {{ moment(news.date_created, local=True).fromNow() }}
+                <hr>
+                    <p class="lead">{{ news.sentence }}</p>
+                    <img src="{{ news.pic }}" class="img-thumbnail img-responsive">
+                    <hr>
+                    <p class="story-text">{{ news.content | safe }}</p>
+                    <hr>
+
+            </div>
+                <div class="sep20"></div>
+                <div class="panel panel-default">
+                <form class="form-custom form-horizontal">
+                        {{ form.hidden_tag() }}
+                        {{ form.content(class="form-control",style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%;",maxlength='10000') }}
+                        <button class="btn  btn-default" onclick="post_reply()">评论</button>
+                    </form>
+                    <ul class="list-group reply-list">
+                        <li class="list-group-item reply-header small">
+                            <strong>{{ replies | length }} 回复<strong></strong>
+                            </strong>
+                        </li>
+                        {% for i in replies %}
+                            <li class="list-group-item reply">
+                                <div class="media">
+                                  <div class="media-left">
+                                    <a href="/member/{{ i.username }}">
+                                     <img class="media-object" src="{{ i.get_user().avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
+                                    </a>
+                                  </div>
+                                    <div class="media-body">
+                                        <span>
+                                            <strong id="username">{{ i.username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ moment(i.date_created, local=True).fromNow() }}</span>
+                                        </span>
+                                        <p>
+                                        {{ i.content | safe }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                    </ul>
+                <div class="sep20">
+                </div>
+                </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(document).ready(function(){
+            $('textarea').focus(function(){
+                {% if not current_user.is_authenticated %}
+                    alert("登录先");
+                    $("textarea").blur();
+                {% endif %}
+            })
+        });
+    function post_reply(){
+        $.ajax({
+            url: "/g/handle_ajax",
+            type: "GET",
+            data: {"tab":"gnews", "action":"post_reply", "id":"{{ news.id }}", "content": $("#content").val()},
+            success: function(msg){
+                alert(msg["info"])
+            }
+        })
+    }
+    {% if current_user.is_authenticated %}
+        var $button = $("<div id='reply-button' class='btn btn-xs'><i class='fa fa-reply' aria-hidden='true'></i></div>").click(function(){
+            var m = $(this).prev().find("#username").text();
+            $("#content").focus().text("@" + m + " ");
+        });
+        $(".reply").hover(function(){ $(this).append($button);
+            $button.show();
+        }, function(){ $button.hide();  });  {% endif %}
+    </script>
+{% endblock %}

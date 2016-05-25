@@ -84,3 +84,32 @@
         </li>
     </ul>
 {% endmacro %}
+
+{% macro table_pg(pagination) %}
+        <ul class="pagination pagination-sm">
+          <li {% if not pagination.has_prev %} class="disabled" {% endif %}>
+              <a href="/adm/manage?tab={{ tab }}&p={{ pagination.page - 1 }}" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span></a>
+          </li>
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1) %}
+            {% if p %}
+            {% if p == pagination.page %}
+            <li class="active">
+            <a href="/adm/manage?tab={{ tab }}&p={{ p }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li>
+            <a href="/adm/manage?tab={{ tab }}&p={{ p }}">{{ p }}</a>
+            </li>
+            {% endif %}
+            {% else %}
+            <li class="disabled"><a href="#">&hellip;</a></li>
+            {% endif %}
+        {% endfor %}
+        <li {% if not pagination.has_next %} class="disabled" {% endif %}>
+            <a href="/adm/manage?tab={{ tab }}&?p={{ pagination.page + 1 }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+{% endmacro %}

@@ -1,0 +1,100 @@
+{% extends "admin/index.html" %}
+
+
+{% block main %}
+    <div class="row">
+			<ol class="breadcrumb">
+				<li><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+				<li class="active">Tables</li>
+			</ol>
+    </div><!--/.row-->
+    <div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">添加新内容</h1>
+			</div>
+    </div><!--/.row-->
+    <hr>
+    <div class="row">
+        <div class="col-md-3 col-xs-3">
+            <div class="box" style="background-color: #0a6ebd" role="button" data-toggle="modal" data-target="#game_news_modal">
+                <span style="color: white"> Add Game News </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!-- 游戏资讯Modal -->
+    <div class="modal fade" id="game_news_modal" tabindex="-1" role="dialog" aria-labelledby="GameNewsLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+              <!-- Form -->
+            <form method="POST" class="form-horizontal form-custom" id="gnews">
+            <fieldset>
+                <legend>添加新游戏资讯</legend>
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    {{ form.title.label(class='control-label col-lg-2') }}
+                    <div class="col-lg-10">
+                        {{ form.title(class='form-control', placeholder='Title') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.sentence.label(class='control-label col-lg-2') }}
+                    <div class="col-lg-10">
+                        {{ form.sentence(class='form-control', placeholder='Sentence') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                        {{ form.content.label(class='control-label col-lg-2') }}
+                        <div class="col-lg-10">
+                            {{ form.content(class='form-control') }}
+                        </div>
+                </div>
+                <div class="form-group">
+                    {{ form.pic.label(class='control-label col-lg-2') }}
+                    <div class="col-lg-10">
+                        {{ form.pic(class="form-control") }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick="gnews_post()">发布</button>
+                      </div>
+                    </div>
+                </div>
+            </fieldset>
+    </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $('#game_news_modal').on('shown.bs.modal', function () {
+          $('#game_news_modal').focus()
+        });
+    function gnews_post(){
+        $.ajax({
+            url: "/g/post",
+            type: "GET",
+            data: $("#gnews").serialize(),
+            success: function(e){
+                alert(e["info"]);
+                $("#game_news_modal").modal("hide")
+            },
+            error: function(){
+                alert("发布失败")
+            }
+        })
+    }
+    </script>
+{% endblock %}

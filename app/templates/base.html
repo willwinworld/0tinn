@@ -4,7 +4,8 @@
 {% endblock %}
 {% block styles %}
     {{ super() }}
-    <link href="http://o6yh09bxd.bkt.clouddn.com/0tinn.css" rel="stylesheet">
+{#    <link href="http://o6yh09bxd.bkt.clouddn.com/0tinn.css" rel="stylesheet">#}
+    <link href="{{ url_for("static", filename="css/0tinn.css") }}" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for("static", filename="favicon.ico") }}">
     {{ moment.include_jquery(version='3.0.0-alpha1', local_js="http://libs.cdnjs.net/jquery/3.0.0-alpha1/jquery.min.js") }}
@@ -28,6 +29,7 @@
                   <div class="collapse navbar-collapse" id="navbar-collapse-1">
               <ul class="nav navbar-nav col-md-2">
                 <li><a href="/">首页<span class="sr-only"></span></a></li>
+                  <li><a href="/g">游戏</a> </li>
               </ul>
                   <form class="navbar-form navbar-left" role="search" action="/search" method="post">
                     <div class="form-group">

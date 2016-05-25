@@ -1,0 +1,31 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>标签</th>
+      <th>标题</th>
+      <th>内容</th>
+      <th>用户名</th>
+        <th>创建时间</th>
+        <th>投票</th>
+        <th>点击数</th>
+        <th>音乐外链</th>
+        <th>最后回复</th>
+    </tr>
+  </thead>
+    <tbody>
+    {% for t in cells.items %}
+        <tr>
+            <th>{{ t.id }}</th>
+            <th>{{ t.label }}</th>
+            <th>{{ t.title }}</th>
+            <th>{{ t.content }}</th>
+            <th>{{ t.username }}</th>
+            <th>{{ t.date_created }}</th>
+            <th>{{ t.vote }}</th>
+            <th>{{ t.click_rate }}</th>
+            <th>{{ t.last_reply }}</th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

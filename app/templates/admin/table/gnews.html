@@ -1,0 +1,29 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>时间</th>
+      <th>标题</th>
+      <th>展示语</th>
+      <th>内容</th>
+        <th>展示图</th>
+        <th>操作</th>
+    </tr>
+  </thead>
+    <tbody>
+    {% for t in cells.items %}
+        <tr>
+            <th>{{ t.id }}</th>
+            <th>{{ t.date_created }}</th>
+            <th>{{ t.title }}</th>
+            <th>{{ t.sentence }}</th>
+            <th>{{ t.content }}</th>
+            <th>{{ t.pic }}</th>
+            <th>
+                <button class="btn btn-danger" onclick="gnews('set_hot&'+'{{ t.id }}')">设为热点</button>
+                <button class="btn btn-default" onclick="gnews('delete&'+ '{{ t.id }}')">删除</button>
+            </th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

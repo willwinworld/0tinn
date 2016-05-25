@@ -1,0 +1,40 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>加入时间</th>
+      <th>最后活跃时间</th>
+      <th>用户名</th>
+      <th>邮箱</th>
+        <th>性别</th>
+        <th>个性签名</th>
+        <th>头像</th>
+        <th>是否认证</th>
+        <th>是否签到</th>
+        <th>总共签到天数</th>
+        <th>最长连续签到天数</th>
+        <th>当前连续签到天数</th>
+        <th>音乐点</th>
+    </tr>
+  </thead>
+    <tbody>
+    {% for t in cells.items %}
+        <tr>
+            <th>{{ t.id }}</th>
+            <th>{{ t.date_joined }}</th>
+            <th>{{ t.lastseen }}</th>
+            <th>{{ t.username }}</th>
+            <th>{{ t.email }}</th>
+            <th>{{ t.gender }}</th>
+            <th>{{ t.signature }}</th>
+            <th>{{ t.avatar }}</th>
+            <th>{{ t.is_confirmed }}</th>
+            <th>{{ t.is_check_in }}</th>
+            <th>{{ t.total_check_in }}</th>
+            <th>{{ t.longest_check_in }}</th>
+            <th>{{ t.continuous_check_in }}</th>
+            <th>{{ t.wealth }}</th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

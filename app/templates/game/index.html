@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2">
+                <h3>资讯</h3>
+                    <div class="hot-box">
+                    <img src="{{ hot.pic }}"  style="width: 100%">
+                    <div class="font-box">
+                        <span class="title" style="font-size: large">{{ hot.title }}</span>
+                        <p>{{ hot.sentence }}</p>
+                    </div>
+                        </div>
+                    <hr>
+                        <h5>最新资讯</h5>
+                    <hr>
+            <div class="list-group">
+                {% for i in news.items %}
+                    <a href="/g/{{ i.id }}" class="list-group-item">
+                    <div class="media">
+                      <div class="media-left">
+                          <img class="media-object" src="{{ i.pic }}" style="width: 250px; height: 140px">
+                      </div>
+                      <div class="media-body">
+                        <h4 class="media-heading">{{ i.title }}</h4>
+                          <p>{{ moment(i.date_created, local=True).fromNow() }}</p>
+                        {{ i.sentence }}
+                      </div>
+                    </div>
+                    </a>
+                {% endfor %}
+                    </div>
+                </div>
+    <div class="sep20"></div>
+    </div>
+    </div>
+{% endblock %}

@@ -4,8 +4,11 @@ from .extensions import *
 from .forum.views import forum
 from .member.views import member
 from .message.views import message
+from .admin.views import adm
+from .game.views import gnews
 from .member.models import Member
 from flaskext.markdown import Markdown
+
 
 def create_app():
     app = Flask(__name__)
@@ -39,3 +42,5 @@ def register_bprint(app):
     app.register_blueprint(forum)
     app.register_blueprint(member)
     app.register_blueprint(message)
+    app.register_blueprint(adm)
+    app.register_blueprint(gnews)

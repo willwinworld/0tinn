@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import redis
+import logging
 
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -25,3 +26,4 @@ mail = Mail()
 redis_store = redis.StrictRedis("localhost", 6379, 0)
 
 admin = Admin()
+
