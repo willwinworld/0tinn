@@ -9,7 +9,7 @@ from app.util.helper import is_discuss
 class Game_News(db.Model):
     __tablename__ = "game_news"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(200), nullable=False, unique=True)
     pic = db.Column(db.String(200), nullable=False)
     sentence = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
