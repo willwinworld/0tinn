@@ -21,7 +21,7 @@ time_out = 20
 try:
     resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
 except:
-    print("链接失败")
+    pass
 soup = BeautifulSoup(resp.content, "html.parser")
 
 
@@ -36,14 +36,12 @@ for c in cells:
     sentence.append(s.find("p", class_="synopsis").text)
     news_url.append(s.find("a")['href'])
 for n in news_url:
-    print("正在尝试链接" + n)
     resp_n = requests.get(n, headers=pcgame_header, timeout=time_out)
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("textplugin").text
     content_en.append(text)
 for i in range(len(pics)):
     gnews = Game_News(title[i], sentence[i], content_en[i], pics[i])
-    print("正在写入" + str(i))
     with app.app_context():
         try:
             gnews.save()
