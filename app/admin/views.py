@@ -4,17 +4,20 @@ from app.game.forms import Game_news
 from app.game.models import Game_News
 from app.forum.models import Topic
 from app.member.models import Member
+from app.util.decorate import admin_must
 
 adm = Blueprint("adm", __name__)
 
 
 @adm.route('/adm', methods=['GET', 'POST'])
+@admin_must
 def index():
 
     return render_template("admin/index.html")
 
 
 @adm.route('/adm/forms', methods=['GET', 'POST'])
+@admin_must
 def forms():
      form = Game_news()
 
@@ -22,6 +25,7 @@ def forms():
 
 
 @adm.route('/adm/manage')
+@admin_must
 def manage():
     if request.method == "GET":
         page = request.args.get("p")

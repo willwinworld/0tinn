@@ -6,8 +6,7 @@ import time
 from math import log2
 from datetime import datetime, timedelta
 from app.extensions import redis_store
-from flask_admin.contrib.sqla import ModelView
-from flask_login import current_user
+
 
 def mark_online(user_id):
     """
@@ -94,22 +93,3 @@ def is_discuss(s):
     else:
         return None
     return result
-
-
-def admin_must(u):
-    if u.username == "Tallone":
-        return True
-    else:
-        return False
-
-
-class AdminViews(ModelView):
-    def is_accessible(self):
-        if current_user.is_authenticated:
-            return admin_must(current_user)
-        else:
-            return False
-
-
-class LetterView(AdminViews):
-    column_exclude_list = ["content",]

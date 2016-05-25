@@ -1,14 +1,11 @@
 # -*- coding:utf-8 -*-
 import redis
-import logging
-
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_mail import Mail
-from flask_admin import Admin
 
 
 bootstrap = Bootstrap()
@@ -24,6 +21,4 @@ moment = Moment()
 mail = Mail()
 
 redis_store = redis.StrictRedis("localhost", 6379, 0)
-
-admin = Admin()
 
