@@ -3,8 +3,8 @@ import os
 
 
 class config():
-    DEBUG = False
-    # BOOTSTRAP_SERVE_LOCAL = True
+    DEBUG = True
+    BOOTSTRAP_SERVE_LOCAL = True
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:boxiao@localhost:3306/0tinn?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
