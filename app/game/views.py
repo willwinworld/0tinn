@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, jsonify, current_app, redirect, url_for
 from flask_login import current_user, login_required
+from app.util.decorate import admin_must
 from .models import Game_News, Gnews_Reply
-from .forms import GnewsReplyForm
+from .forms import GnewsReplyForm, Game_news
 
 gnews = Blueprint("gnews", __name__)
 
@@ -71,3 +72,18 @@ def handle_ajax():
                     except:
                         return jsonify(info="评论失败")
         return jsonify(info="OK")
+
+
+@gnews.route('/g/edit/<int:id>', methods=['GET', 'POST'])
+@admin_must
+def edit(id):
+    o_gn = Game_News.query.get(id)
+    form = Game_news()
+    if form.validate_on_submit():
+        o_gn.title = form.title.data
+        o_gn.sentence = form.sentence.data
+        o_gn.content = form.content.data
+        o_gn.pic = form.pic.data
+        o_gn.save()
+        return redirect(url_for("adm.manage"))
+    return render_template("game/edit.html", news=o_gn, form=form)
