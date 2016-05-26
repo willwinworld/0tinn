@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import json
-from flask import Blueprint,render_template, flash, url_for, redirect, session, request
+from flask import Blueprint,render_template, flash, url_for, redirect, session, request, current_app
 from flask_login import current_user, login_required
 from .models import Topic, Reply
 from .forms import PostForm, ReplyForm
@@ -21,6 +21,7 @@ def index():
     hot_topics = Topic.get_hot()
     tab = "new"
     topics = Topic.get_topic(1, tab).items
+    current_app.logger.info("helo")
     if request.method == "GET":
         t = request.args.get("tab")
         if t is not None:

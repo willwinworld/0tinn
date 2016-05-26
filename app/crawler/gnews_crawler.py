@@ -3,6 +3,7 @@ import requests
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
+from app.util.helper import up_avatar
 
 pics = []
 title = []
@@ -28,10 +29,21 @@ soup = BeautifulSoup(resp.content, "html.parser")
 def n_filter(tag):
     return tag.has_attr("data-page") and "listingResult" in tag["class"]
 
+def upload_pic(url):
+        res = up_avatar(url)
+        if 'info' in res:
+            return False
+        else:
+             return res['s_url']
+
 cells = soup.find_all(n_filter)
 for c in cells:
     s = BeautifulSoup(str(c), "html.parser")
-    pics.append(s.find("figure")["data-original"])
+    p = s.find("figure")["data-original"]
+    pic = upload_pic(p)
+    if not pic:
+        pic = p
+    pics.append(pic)
     title.append(s.find("h3", class_="article-name").text)
     sentence.append(s.find("p", class_="synopsis").text)
     news_url.append(s.find("a")['href'])
