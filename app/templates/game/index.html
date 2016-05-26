@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macro %}
 
 {% block content %}
     <div class="container-fluid">
@@ -33,6 +34,9 @@
                     </a>
                 {% endfor %}
                     </div>
+            {% if news.total > 30 %}
+                {{ macro.gnews_pg(news) }}
+            {% endif %}
                 </div>
     <div class="sep20"></div>
     </div>

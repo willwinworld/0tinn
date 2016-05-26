@@ -14,7 +14,7 @@ def index():
         hot = Game_News.get_hot()
         if page is None:
             page = 1
-        news = Game_News.get(page)
+        news = Game_News.get(int(page))
 
     return render_template("game/index.html", news=news, hot=hot)
 

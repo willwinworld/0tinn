@@ -38,8 +38,9 @@ for c in cells:
 for n in news_url:
     resp_n = requests.get(n, headers=pcgame_header, timeout=time_out)
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
-    text = soup_n.find("textplugin").text
-    content_en.append(text)
+    text = soup_n.find("textplugin")
+    soup_n.find("textplugin").contents[0].decompose()
+    content_en.append(str(text))
 for i in range(len(pics)):
     gnews = Game_News(title[i], sentence[i], content_en[i], pics[i])
     with app.app_context():

@@ -14,7 +14,9 @@
                     <p class="lead">{{ news.sentence }}</p>
                     <img src="{{ news.pic }}" class="img-thumbnail img-responsive">
                     <hr>
-                    <p class="story-text">{{ news.content | safe }}</p>
+                    <div class="story-text">
+                    {{ news.content | safe }}
+                        </div>
                     <hr>
 
             </div>
