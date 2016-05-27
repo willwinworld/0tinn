@@ -6,7 +6,7 @@
     <div class="panel panel-default">
     <form method="POST" class="form-horizontal form-custom" action="/reset_pw/{{ r_email }}/{{ r_token }}">
         <fieldset>
-            <legend>重新设置密码</legend>
+            <legend>Reset password</legend>
             <div class="form-group">
                 {{ form.hidden_tag() }}
             <div class="form-group">
@@ -28,8 +28,8 @@
             </div>
             <div class="form-group">
                 <div id="embed-captcha"></div>
-                <p id="wait" class="show">正在加载验证码......</p>
-                <p id="notice" class="hide">请先拖动验证码到相应位置</p>
+                <p id="wait" class="show">Loading Verification Code....</p>
+                <p id="notice" class="hide">Please drag Verification Code to the appropriate location</p>
             </div>
             <div class="form-group">
                 <div class="col-lg-10 col-lg-offset-2">

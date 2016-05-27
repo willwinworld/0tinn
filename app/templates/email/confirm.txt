@@ -1,6 +1,6 @@
 Dear {{ user.username }}:
-欢迎注册0tinn!
-激活邮箱请点击下面链接:
+Welcome to 0Tinn community!
+Please click on the link below to activate email:
 {{ url_for('members.confirm', token=token, _external=True) }}
 Sincerely,
 Tallone

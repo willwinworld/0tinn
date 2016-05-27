@@ -46,6 +46,47 @@ class Game_News(db.Model):
         redis_store.set("gnews_hot", id)
 
 
+class Gaming_strategy(db.Model):
+    __tablename__ = "gaming_strategy"
+    id = db.Column(db.Integer, primary_key=True)
+    lab = db.Column(db.String(80))
+    title = db.Column(db.String(200), nullable=False, unique=True)
+    pic = db.Column(db.String(200), nullable=False)
+    sentence = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    date_created = db.Column(db.DateTime, default=now_time())
+
+    def __repr__(self):
+        return "<{}.{}>".format(self.__class__.__name__, self.id)
+
+    def __init__(self, title, sentence, content, pic):
+        self.title = title
+        self.sentence = sentence
+        self.content = content
+        self.pic = pic
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def get(cls, page):
+        return cls.query.order_by(cls.date_created.desc()).paginate(page, 30, False)
+
+    @classmethod
+    def get_hot(cls):
+        id = redis_store.get("g_strategy_hot")
+        return cls.query.get(int(id))
+
+    @staticmethod
+    def set_hot(id):
+        redis_store.set("g_strategy_hot", id)
+
+
 class Gnews_Reply(db.Model):
     __tablename__ = "g_reply"
     id = db.Column(db.Integer, primary_key=True)

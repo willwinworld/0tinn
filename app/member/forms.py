@@ -7,23 +7,23 @@ from .models import Member
 
 
 class SignupForm(Form):
-    email = StringField("邮箱", validators=[DataRequired(message="A E-Mail Address is required."),
+    email = StringField("Email", validators=[DataRequired(message="A E-Mail Address is required."),
                                           Email(message="Invalid E-Mail Address")])
-    username = StringField('用户名', validators=[DataRequired(message='A Username is required.'), Length(1, 64)])
-    password = PasswordField('密码',
+    username = StringField('Username', validators=[DataRequired(message='A Username is required.'), Length(1, 64)])
+    password = PasswordField('Password',
                              validators=[InputRequired(), EqualTo('confirm_password', message="Password must match.")])
-    confirm_password = PasswordField('确认密码')
-    submit = SubmitField('注册')
+    confirm_password = PasswordField('Confirm password')
+    submit = SubmitField('Sign up')
 
     def validate_username(self, field):
         user = Member.query.filter_by(username=field.data).first()
         if user:
-            raise ValidationError("用户名已被使用")
+            raise ValidationError("Username is already in use")
 
     def validate_email(self, field):
         email = Member.query.filter_by(email=field.data).first()
         if email:
-            raise ValidationError('邮箱已经注册')
+            raise ValidationError('E-mail is already registered')
 
     def save(self):
         user = Member(emai=self.email.data,
@@ -33,21 +33,21 @@ class SignupForm(Form):
 
 
 class LoginForm(Form):
-    email = StringField('账号', validators=[DataRequired(message="还没有填写邮箱")])
-    password = PasswordField('密码', validators=[DataRequired(message='还没有填写密码')])
-    remeber_me = BooleanField('记住', default=False)
-    submit = SubmitField('登录')
+    email = StringField('Username', validators=[DataRequired(message="还没有填写邮箱")])
+    password = PasswordField('Password', validators=[DataRequired(message='还没有填写密码')])
+    remeber_me = BooleanField('Remeber', default=False)
+    submit = SubmitField('Sign in')
 
 
 class SettingForm(Form):
-    avatar = StringField('新头像上传')
-    gender = RadioField('性别',
+    avatar = StringField('Upload new avatar')
+    gender = RadioField('Gender',
                         choices=[('genderless', 'genderless'), ('mars', 'mars'), ('venus', 'venus')],)
-    signature = TextAreaField('个性签名')
-    submit = SubmitField('保存')
+    signature = TextAreaField('Signature')
+    submit = SubmitField('Submit')
 
 
 class ResetpwForm(Form):
-    password = PasswordField("新密码", validators=[InputRequired(), EqualTo('confirm_password', message="Password must match.")])
-    confirm_password = PasswordField('确认密码')
-    submit = SubmitField("确定")
+    password = PasswordField("New password", validators=[InputRequired(), EqualTo('confirm_password', message="Password must match.")])
+    confirm_password = PasswordField('Confirm password')
+    submit = SubmitField("Confirm")

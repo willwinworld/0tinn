@@ -1,5 +1,4 @@
 <p>Dear {{ user.username }}:</p>
-<p>重设密码：</p>
+<p>Reset password：</p>
 <p><a href="{{ url_for('members.reset_pw', email=email, token=token,  _external=True) }}">{{ url_for('members.reset_pw', email=email,  token=token,_external=True) }}</a> </p>
-<p>如无法点击亲复制链接在浏览器中打开.</p>
-<p>以上！</p>
+<p>If you can not copy Click the link to open in a browser.</p>

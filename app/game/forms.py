@@ -11,4 +11,4 @@ class Game_news(Form):
     submit = SubmitField("保存")
 
 class GnewsReplyForm(Form):
-    content = TextAreaField("评论")
+    content = TextAreaField("Submit")

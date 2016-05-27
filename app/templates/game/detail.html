@@ -25,11 +25,11 @@
                 <form class="form-custom form-horizontal">
                         {{ form.hidden_tag() }}
                         {{ form.content(class="form-control",style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%;",maxlength='10000') }}
-                        <button class="btn  btn-default" onclick="post_reply()">评论</button>
+                        <button class="btn  btn-default" onclick="post_reply()">Comment</button>
                     </form>
                     <ul class="list-group reply-list">
                         <li class="list-group-item reply-header small">
-                            <strong>{{ replies | length }} 回复<strong></strong>
+                            <strong>{{ replies | length }} Reply<strong></strong>
                             </strong>
                         </li>
                         {% for i in replies %}

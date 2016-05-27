@@ -7,22 +7,22 @@
     <form method="post" class="form-horizontal form-custom">
         {{ form.hidden_tag() }}
         <fieldset>
-            <legend>设置</legend>
+            <legend>Settings</legend>
             <div class="form-group">
-                <div class="control-label col-lg-2">用户名</div>
+                <div class="control-label col-lg-2">Username</div>
                 <div class="control">
                     <div class="col-lg-10"><strong>{{ current_user.username }}</strong></div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="control-label col-lg-2">邮箱</div>
+                <div class="control-label col-lg-2">Email</div>
                 <div class="control">
                     <div class="col-lg-10">
                         <div class="pull-right">
                             {% if current_user.is_confirmed %}
-                                <div class="label label-success">已验证</div>
+                                <div class="label label-success">Verified</div>
                             {% else %}
-                                <label class="label label-danger" role="button" onclick="confirm()">未验证</label>
+                                <label class="label label-danger" role="button" onclick="confirm()">Unverified</label>
                             {% endif %}
                         </div>
                         <strong>{{ current_user.email }}</strong>
@@ -53,7 +53,7 @@
                 </div>
             </div>
         <div class="form-group">
-            <div class="col-lg-2 control-label">当前头像</div>
+            <div class="col-lg-2 control-label">Current Avatar</div>
             <div class="col-lg-10 control">
                 <div >
                     <img src="{{ current_user.avatar }}" style="width: 73px; height: 73px">
@@ -71,10 +71,10 @@
                     {% endfor %}
                 {% endif %}
                 <div class="col-lg-offset-2 col-lg-10 text-muted">
-                    <p>关于头像的规则</p>
+                    <p>Rules on Avatar</p>
                     <ul >
-                        <li>禁止使用任何低俗或者敏感图片作为头像</li>
-                        <li>如果你是男的，请不要用女人的照片作为头像</li>
+                        <li>DO NOT use any vulgar or sensitive image as an avatar</li>
+                        <li>If you are a man, a woman, do not use the photo as avatar</li>
                     </ul>
                 </div>
         <div class="form-group ">
@@ -93,7 +93,7 @@
         $(document).ready(function() {
             var c = getCookie("Sended");
             if (c != "") {
-                $(".label-danger").text("等待60秒").removeAttr("onclick");
+                $(".label-danger").text("Wait 60 second").removeAttr("onclick");
             }
         });
         function confirm(){
@@ -102,12 +102,12 @@
                     url: "/send_confirm/{{ current_user.id }}",
                     type: "POST",
                     success: function () {
-                        alert("发送成功,不要忘记查看垃圾邮件.");
-                        $(".label-danger").text("已发送").removeAttr("onclick");
+                        alert("Sent successfully, do not forget to check spam.");
+                        $(".label-danger").text("Sended").removeAttr("onclick");
                         Setcookie();
                     },
                     error: function () {
-                        alert("发送失败")
+                        alert("Send failed")
                     }
                 })
             }

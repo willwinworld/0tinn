@@ -36,14 +36,14 @@ def post():
         content = request.args['content']
         pic = request.args['pic']
         if title == "" and sentence == "" and content == "" and pic == "":
-            return jsonify(info="失败")
+            return jsonify(info="Failed")
         else:
             gn = Game_News(title, sentence, content, pic)
             try:
                 gn.save()
-                return jsonify(info="发布成功")
+                return jsonify(info="Successed")
             except:
-                return jsonify(info="尝试存入数据库错误")
+                return jsonify(info="Failed")
 
 
 @gnews.route('/g/handle_ajax', methods=['GET'])
@@ -61,16 +61,16 @@ def handle_ajax():
                 reply_content = request.args.get("content")
                 # 对评论内容做判断
                 if reply_content == "":
-                    return jsonify(info="内容不能为空")
+                    return jsonify(info="content is none")
                 else:
                     uname = current_user.username
                     uid = current_user.id
                     rep = Gnews_Reply(id=id, u_id=uid,name=uname,content=reply_content)
                     try:
                         rep.save()
-                        return jsonify(info="评论成功")
+                        return jsonify(info="success")
                     except:
-                        return jsonify(info="评论失败")
+                        return jsonify(info="failed")
         return jsonify(info="OK")
 
 

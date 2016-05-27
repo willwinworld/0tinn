@@ -14,7 +14,7 @@
                     <td>
                     </td>
                     <td>
-                        <button class="btn btn-primary" onclick="send()" id="send">发送</button>
+                        <button class="btn btn-primary" onclick="send()" id="send">Send</button>
                     </td>
                 </tr>
             </tbody>
@@ -24,6 +24,6 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        function send(){$("#send").html('<i class="fa fa-spinner fa-pulse fa-1x fa-fw margin-bottom"></i> <span class="sr-only">Loading..</span>');$("#send").addClass("disabled");$.ajax({url:"/forget?email="+$("#email").val(),type:"GET",success:function(msg){alert(msg);$("#send").html("已发送").removeAttr("onclick")},error:function(msg){alert("发送失败")}})};
+        function send(){$("#send").html('<i class="fa fa-spinner fa-pulse fa-1x fa-fw margin-bottom"></i> <span class="sr-only">Loading..</span>');$("#send").addClass("disabled");$.ajax({url:"/forget?email="+$("#email").val(),type:"GET",success:function(msg){alert(msg);$("#send").html("Sended").removeAttr("onclick")},error:function(msg){alert("Send failed")}})};
     </script>
 {% endblock %}

@@ -5,5 +5,5 @@ from wtforms.validators import DataRequired
 
 
 class LetterForm(Form):
-    content = TextAreaField("内容", validators=[DataRequired()])
+    content = TextAreaField("Content", validators=[DataRequired()])
 

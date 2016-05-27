@@ -6,7 +6,7 @@
     <div class="panel panel-default">
     <form method="POST" class="form-horizontal form-custom" action="/login">
         <fieldset>
-            <legend>登录</legend>
+            <legend>Sign in</legend>
             <div class="form-group">
                 {{ form.hidden_tag() }}
                 {{ form.email.label(class='control-label col-lg-2') }}
@@ -38,13 +38,13 @@
                 </div>
             <div class="form-group">
                 <div id="embed-captcha"></div>
-                <p id="wait" class="show">正在加载验证码......</p>
-                <p id="notice" class="hide">请先拖动验证码到相应位置</p>
+                <p id="wait" class="show">Loading verification code....</p>
+                <p id="notice" class="hide">Please drag the code to the appropriate location</p>
             </div>
             <div class="form-group">
                 <div class="col-lg-10 col-lg-offset-2">
                     {{ form.submit(class='btn btn-primary') }}
-                    <div class="pull-right">没有账号？<a href="/login">注册</a>,<a href="/forget">忘记密码？</a> </div>
+                    <div class="pull-right">No account？<a href="/login">Sign up</a>,<a href="/forget">forget password？</a> </div>
                 </div>
             </div>
         </fieldset>

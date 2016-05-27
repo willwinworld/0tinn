@@ -7,7 +7,7 @@
         <form class="form-horizontal form-custom" action="/post" method="post">
             {{ form.hidden_tag() }}
             <fieldset>
-                <legend>分享</legend>
+                <legend>New</legend>
                 <div class="form-group">
                     {{ form.title.label(class='col-md-2 control-label') }}
                     <div class="col-md-10">
@@ -35,7 +35,7 @@
                     <div class="col-md-8">
                         {{ form.music_chain(class='form-control', placeholder='Music outchain') }}
                     </div>
-                    <div class="col-md-2"> <a href="/how"><i class="fa fa-question fa-2x" aria-hidden="true"></i> <span class="small"> 不清楚？</span></a></div>
+                    <div class="col-md-2"> <a href="/how"><i class="fa fa-question fa-2x" aria-hidden="true"></i> <span class="small"> Unclear？</span></a></div>
                      {% if form.music_chain.errors %}
                         {% for error in form.music_chain.errors %}
                             <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>

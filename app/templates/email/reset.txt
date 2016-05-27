@@ -1,5 +1,5 @@
 Dear {{ user.username }}:
-重设密码请点击下面链接:
+Here is the link:
 {{ url_for('members.reset_pw', email=email, token=token, _external=True) }}
 Sincerely,
 Tallone

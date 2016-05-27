@@ -50,13 +50,13 @@ def article(id):
                     reply.save()
                     return redirect(url_for('.article', id=id))
                 except:
-                    flash("评论失败", "danger")
+                    flash("Reply failed", "danger")
         if request.form["action"]=="add_vote":
             if topic.into_topic_liked(current_user.username):
                 current_user.collect_topic(topic.id)
                 return json.dumps({"status": "ok"})
     if topic is None:
-        return "主题不存在"
+        return "Topic missed"
     return render_template('forum/article.html', topic=topic, replies=replies, form=form, pagination=pagination)
 
 
@@ -87,10 +87,10 @@ def post():
                      form.label.data)
         try:
             topic.save()
-            flash('分享成功', 'success')
+            flash('Post success', 'success')
             return redirect(url_for('.index'))
         except:
-            flash('发布失败', 'danger')
+            flash('Failed', 'danger')
     return render_template('forum/post.html', form=form)
 
 
@@ -105,10 +105,10 @@ def edit(id):
         topic.music_chain = form.music_chain.data
         try:
             topic.save(action="edit")
-            flash('编辑成功', 'success')
+            flash('success', 'success')
             return redirect(url_for('.index'))
         except:
-            flash('编辑失败', 'danger')
+            flash('failed', 'danger')
     return render_template("forum/edit.html", form=form, topic=topic)
 
 

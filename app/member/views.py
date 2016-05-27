@@ -36,14 +36,14 @@ def index(username):
     topics = Topic.get_user_topic(username)
     replies = Reply.get_user_reply(username)
     if user is None:
-        return "没有此人"
+        return "No this member"
     return render_template('user/index.html', user=user, topics=topics, replies=replies, msg=msg, form=form, letters=letter, like_topics=like_topics)
 
 
 @member.route('/signup', methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
-        flash('已经登录了', 'info')
+        flash('Already sign in', 'info')
         return redirect('/')
     form = SignupForm()
     gt = GeetestLib(captcha_id, private_key)
@@ -64,7 +64,7 @@ def signup():
             except:
                 print('send email failed!')
             login_user(user)
-            flash('注册成功，待会别忘了去邮箱验证', 'success')
+            flash('Sign up success, do not to your email to check mail', 'success')
             return redirect("/")
     return render_template('user/signup.html', form=form)
 
@@ -73,7 +73,7 @@ def signup():
 def login():
     gt = GeetestLib(captcha_id, private_key)
     if current_user.is_authenticated:
-        flash('已经登录了', "info")
+        flash('Already sign in', "info")
         return redirect("/")
     form = LoginForm()
     if form.validate_on_submit():
@@ -92,7 +92,7 @@ def login():
                 login_user(user, form.remeber_me.data)
                 return redirect("/")
             else:
-                flash("邮箱或密码不正确", 'warning')
+                flash("email or password not correct", 'warning')
     return render_template('user/login.html',form=form)
 
 
@@ -110,12 +110,12 @@ def forget():
         if email is not None:
             user = Member.query.filter_by(email=email).first()
             if user is None:
-                return "用户不存在"
+                return "email error"
             try:
                 send_reset_email(user, user.set_token(), email)
-                return "邮件已发出"
+                return "sended"
             except:
-                return "发送失败"
+                return "failed"
     return render_template("user/forget.html")
 
 
@@ -134,11 +134,11 @@ def get_captcha():
 @login_required
 def confirm(token):
     if current_user.is_confirmed:
-        return "不要调皮"
+        return "Don't be naughty"
     if current_user.confirm(token):
-        flash('激活成功', 'success')
+        flash('Activate success', 'success')
         return redirect("/")
-    return "已经失效"
+    return "failed"
 
 
 @member.route('/reset_pw/<string:email>/<token>', methods=['GET', 'POST'])
@@ -159,7 +159,7 @@ def reset_pw(email, token):
                 result = gt.failback_validate(challenge, validate, seccode)
             if result:
                 user.set_pw(form.password.data)
-                flash('重设成功', 'success')
+                flash('Reset success', 'success')
                 return redirect(url_for(".login"))
     return render_template("user/resetpw.html", form=form, r_token=token, r_email=email)
 
@@ -179,9 +179,9 @@ def setting():
                 return redirect(url_for(".setting"))
         try:
             current_user.save()
-            flash('保存成功', 'success')
+            flash('Save success', 'success')
         except:
-            print('保存失败.')
+            print('Save failed.')
     return render_template('user/setting.html', form=form)
 
 
@@ -193,7 +193,7 @@ def send_confirm(id):
         if user.username == current_user.username:
             send_confirm_email(user, user.set_token())
         else:
-            return "不要调皮"
+            return "Don't be naughty"
     return "-_-"
 
 
@@ -205,14 +205,14 @@ def deal_follow():
         action = request.args.get('action')
         if action == "follow":
             if current_user.following(u_id):
-                return '关注成功'
+                return 'success'
             else:
-                return "关注失败"
+                return "failed"
         elif action=="unsubscribe":
             if current_user.remove_following(u_id):
-                return "取消成功"
+                return "success"
             else:
-                return "取消失败"
+                return "failed"
         elif action=="is_followed":
             if current_user.is_followed(u_id):
                 return "yes"
@@ -229,11 +229,11 @@ def check_in():
             if current_user.check_in():
                 d = current_user.continuous_check_in
                 if d != 0:
-                    return jsonify({"info": "签到成功,目前连续签到 {} 天".format(current_user.continuous_check_in)})
+                    return jsonify({"info": "In success, at present continuous sign {} days".format(current_user.continuous_check_in)})
                 else:
-                    return jsonify({"info": "签到成功"})
+                    return jsonify({"info": "Sign in success"})
             else:
-                return jsonify({"info": "签到失败"})
+                return jsonify({"info": "Sign in failure"})
     return False
 
 
