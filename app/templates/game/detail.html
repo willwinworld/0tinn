@@ -65,7 +65,7 @@
         $(document).ready(function(){
             $('textarea').focus(function(){
                 {% if not current_user.is_authenticated %}
-                    alert("登录先");
+                    alert("Login first");
                     $("textarea").blur();
                 {% endif %}
             })
