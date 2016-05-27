@@ -7,7 +7,7 @@ def admin_must(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if current_user.is_authenticated:
-            if current_user.username != "boxiao":
+            if current_user.username != "Tallone":
                 return "Sorry,you can not view this page"
             else:
                 return func(*args, **kwargs)

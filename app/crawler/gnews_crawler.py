@@ -59,4 +59,4 @@ for i in range(len(pics)):
         try:
             gnews.save()
         except:
-            pass
+            break
