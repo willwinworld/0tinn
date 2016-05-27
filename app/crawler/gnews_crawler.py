@@ -1,16 +1,11 @@
 # -*- coding:utf-8 -*-
 import requests
+import asyncio
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.util.helper import up_avatar
 
-pics = []
-title = []
-news_url = []
-sentence = []
-content_en = []
-content_cn = []
 pcgamer_url = 'http://www.pcgamer.com/news/'
 pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 "Accept-Encoding":"gzip, deflate, sdch",
@@ -19,44 +14,67 @@ pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9
           "Host":"www.pcgamer.com","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
           }
 time_out = 20
-try:
-    resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
-except:
-    pass
+print("Try connect pcgamer.....")
+resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
+print("Complete")
 soup = BeautifulSoup(resp.content, "html.parser")
 
 
 def n_filter(tag):
     return tag.has_attr("data-page") and "listingResult" in tag["class"]
 
+cells = soup.find_all(n_filter)
+
+
+@asyncio.coroutine
 def upload_pic(url):
         res = up_avatar(url)
         if 'info' in res:
-            return False
+            yield False
         else:
-             return res['s_url']
+            return res['s_url']
 
-cells = soup.find_all(n_filter)
-for c in cells:
-    s = BeautifulSoup(str(c), "html.parser")
-    p = s.find("figure")["data-original"]
-    pic = upload_pic(p)
-    if not pic:
-        pic = p
-    pics.append(pic)
-    title.append(s.find("h3", class_="article-name").text)
-    sentence.append(s.find("p", class_="synopsis").text)
-    news_url.append(s.find("a")['href'])
-for n in news_url:
+
+@asyncio.coroutine
+def deal_cells():
+    for c in cells:
+        print("Action")
+        s = BeautifulSoup(str(c), "html.parser")
+        p = s.find("figure")["data-original"]
+        print("Now upload pic")
+        pic = yield from upload_pic(p)
+        if not pic:
+            pic = p
+        t = s.find("h3", class_="article-name").text
+        st = s.find("p", class_="synopsis").text
+        n_url = s.find("a")['href']
+        ct = yield from get_content(n_url)
+        over = yield from gnews_save(t, st, ct, pic)
+        if not over:
+            break
+
+
+@asyncio.coroutine
+def get_content(n):
+    print("Let us get content")
     resp_n = requests.get(n, headers=pcgame_header, timeout=time_out)
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("textplugin")
     soup_n.find("textplugin").contents[0].decompose()
-    content_en.append(str(text))
-for i in range(len(pics)):
-    gnews = Game_News(title[i], sentence[i], content_en[i], pics[i])
+    return str(text)
+
+
+@asyncio.coroutine
+def gnews_save(t, s, ct, p):
+    gnews = Game_News(t, s, ct, p)
+    print("Yeah save!!!!")
     with app.app_context():
         try:
             gnews.save()
+            return True
         except:
-            break
+            return False
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(deal_cells())
+loop.close()
