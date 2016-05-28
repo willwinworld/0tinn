@@ -75,6 +75,7 @@ def gnews_save(t, s, ct, p):
         except:
             return False
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(deal_cells())
-loop.close()
+def run_gnews():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(deal_cells())
+    loop.close()

@@ -29,7 +29,7 @@
                     {% include "admin/table/music.html" %}
                 {% endif %}
             {% if cells.total >= 20 %}
-                {{ macros.table_pg(cells) }}
+                {{ macros.table_pg(cells, tab) }}
             {% endif %}
             </div>
             </div>

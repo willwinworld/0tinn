@@ -28,7 +28,7 @@ def forms():
 @admin_must
 def manage():
     if request.method == "GET":
-        page = request.args.get("p")
+        page = int(request.args.get("p"))
         tab = request.args.get("tab")
         if tab == "":
             tab = "gnews"
