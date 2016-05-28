@@ -10,6 +10,14 @@
     <link rel="icon" href="{{ url_for("static", filename="favicon.ico") }}">
     {{ moment.include_jquery(version='3.0.0-alpha1', local_js="http://libs.cdnjs.net/jquery/3.0.0-alpha1/jquery.min.js") }}
     {{ moment.include_moment(version='2.12.0', local_js="http://libs.cdnjs.net/moment.js/2.12.0/moment.min.js") }}
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-74862228-2', 'auto');
+    ga('send', 'pageview');
+  </script>
 {% endblock %}
 {% block navbar %}
         <nav class="navbar navbar-inverse">
@@ -181,12 +189,4 @@
               $('[data-toggle="popover"]').popover()
             })
     </script>
-    <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-74862228-2', 'auto');
-    ga('send', 'pageview');
-  </script>
 {% endblock %}

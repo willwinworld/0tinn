@@ -20,10 +20,10 @@ def index():
     return render_template("game/index.html", news=news, hot=hot)
 
 
-@gnews.route('/g/<int:id>', methods=['GET', 'POST'])
-def detail(id):
-    news = Game_News.query.filter_by(id=id).first_or_404()
-    replies = Gnews_Reply.get(id)
+@gnews.route('/g/<string:title>', methods=['GET', 'POST'])
+def detail(title):
+    news = Game_News.query.filter_by(title=title).first_or_404()
+    replies = Gnews_Reply.get(news.id)
     form = GnewsReplyForm()
     return render_template("game/detail.html", news=news, replies=replies, form=form)
 
