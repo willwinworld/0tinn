@@ -30,7 +30,7 @@ cells = soup.find_all(n_filter)
 def upload_pic(url):
         res = up_avatar(url)
         if 'info' in res:
-            yield False
+            return False
         else:
             return res['s_url']
 

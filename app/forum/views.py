@@ -21,7 +21,6 @@ def index():
     hot_topics = Topic.get_hot()
     tab = "new"
     topics = Topic.get_topic(1, tab).items
-    current_app.logger.info("helo")
     if request.method == "GET":
         t = request.args.get("tab")
         if t is not None:
