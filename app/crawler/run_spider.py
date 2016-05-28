@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-from .gnews_crawler import run_gnews
 from .wccftech_spider import run_wccftech
+from .gnews_crawler import run_gnews
 
 from multiprocessing import Process
 
