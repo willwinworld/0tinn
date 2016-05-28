@@ -71,7 +71,7 @@ class Pri_letter(db.Model):
 
     @staticmethod
     def get_user_letter(u_id):
-        return Pri_letter.query.filter_by(from_user_id=u_id).order_by(Pri_letter.date_created.desc()).all()
+        return Pri_letter.query.filter_by(to_user_id=u_id).order_by(Pri_letter.date_created.desc()).all()
 
     @staticmethod
     def get_letter_num(u_id):
