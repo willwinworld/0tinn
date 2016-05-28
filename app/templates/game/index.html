@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-2">
                 <h3>News</h3>
-                <a href="/g/{{ hot.id }}">
+                <a href="/g/{{ hot.id }}"  itemprop="url">
                     <div class="hot-box">
                     <img src="{{ hot.pic }}"  style="width: 100%">
                     <div class="font-box">
-                        <span class="title" style="font-size: large">{{ hot.title }}</span>
+                        <span itemscope itemtype="http://schema.org/Article" class="title" style="font-size: large">{{ hot.title }}</span>
                         <p>{{ hot.sentence }}</p>
                     </div>
                         </div>
@@ -20,13 +20,13 @@
                     <hr>
             <div class="list-group">
                 {% for i in news.items %}
-                    <a href="/g/{{ i.title }}" class="list-group-item">
+                    <a href="/g/{{ i.title }}" class="list-group-item" itemprop="url">
                     <div class="media">
                       <div class="media-left">
-                          <img class="media-object" src="{{ i.pic }}" style="width: 250px; height: 140px">
+                          <img class="media-object" src="{{ i.pic }}" style="width: 250px; height: 140px"  itemprop="image">
                       </div>
                       <div class="media-body">
-                        <h4 class="media-heading">{{ i.title }}</h4>
+                        <h4 class="media-heading" itemscope itemtype="http://schema.org/Article">{{ i.title }}</h4>
                           <p>{{ moment(i.date_created, local=True).fromNow() }}</p>
                         {{ i.sentence }}
                       </div>
