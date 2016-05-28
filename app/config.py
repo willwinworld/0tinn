@@ -18,4 +18,4 @@ class config():
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ['EMAIL_USERNAME']
     MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
-    MAIL_DEFAULT_SENDER = ('0tinn社区', MAIL_USERNAME)
+    MAIL_DEFAULT_SENDER = ('0tinn', MAIL_USERNAME)
