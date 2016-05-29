@@ -12,7 +12,9 @@ gnews = Blueprint("gnews", __name__)
 def index():
     if request.method == "GET":
         page = request.args.get("p")
-        if page < 1 or page is None:
+        if page is None:
+            page = 1
+        elif page < 1:
             page = 1
         hot = Game_News.get_hot()
         news = Game_News.get(int(page))
