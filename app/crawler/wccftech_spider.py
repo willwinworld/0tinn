@@ -28,28 +28,27 @@ def upload_pic(url):
 
 @asyncio.coroutine
 def deal_cells():
-    for i in range(10):
-        print("Try connect Wccftech, page:" + str(i))
-        wccftech_url = 'http://wccftech.com/topic/games/page/' + str(i)
-        resp = requests.get(wccftech_url, headers=wccftech_header, timeout=time_out)
-        print("Complete")
-        soup = BeautifulSoup(resp.content, "html.parser")
-        cells = soup.find_all("div", class_="post")
-        for c in cells:
-            print("Action")
-            s = BeautifulSoup(str(c), "html.parser")
-            p = s.find("img")["src"]
-            t = s.find("h2").text
-            t = t.replace("/", "|")
-            st = list(s.strings)[-1].strip()
-            n_url = s.find("a")['href']
-            ct, p = yield from get_content(n_url)
-            pic = yield from upload_pic(p)
-            if not pic:
-                pic = p
-            over = yield from gnews_save(t, st, ct, pic)
-            if not over:
-                break
+    print("Try connect Wccftech")
+    wccftech_url = 'http://wccftech.com/topic/games/page/1'
+    resp = requests.get(wccftech_url, headers=wccftech_header, timeout=time_out)
+    print("Complete")
+    soup = BeautifulSoup(resp.content, "html.parser")
+    cells = soup.find_all("div", class_="post")
+    for c in cells:
+        print("Action")
+        s = BeautifulSoup(str(c), "html.parser")
+        p = s.find("img")["src"]
+        t = s.find("h2").text
+        t = t.replace("/", "|")
+        st = list(s.strings)[-1].strip()
+        n_url = s.find("a")['href']
+        ct, p = yield from get_content(n_url)
+        pic = yield from upload_pic(p)
+        if not pic:
+            pic = p
+        over = yield from gnews_save(t, st, ct, pic)
+        if not over:
+            break
 
 
 @asyncio.coroutine
