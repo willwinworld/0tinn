@@ -71,6 +71,11 @@ def handle_ajax():
                         return jsonify(info="success")
                     except:
                         return jsonify(info="failed")
+            elif action == "delete":
+                if current_user.username == "Tallone":
+                    gn = Game_News.query.get(id)
+                    gn.delete()
+                    return jsonify(info="Deleted")
         return jsonify(info="OK")
 
 
