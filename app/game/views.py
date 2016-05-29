@@ -14,7 +14,7 @@ def index():
         page = request.args.get("p")
         if page is None:
             page = 1
-        elif page < 1:
+        elif int(page) < 1:
             page = 1
         hot = Game_News.get_hot()
         news = Game_News.get(int(page))
