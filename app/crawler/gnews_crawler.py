@@ -46,6 +46,7 @@ def deal_cells():
         if not pic:
             pic = p
         t = s.find("h3", class_="article-name").text
+        t = t.replace("/", "|")
         st = s.find("p", class_="synopsis").text
         n_url = s.find("a")['href']
         ct = yield from get_content(n_url)

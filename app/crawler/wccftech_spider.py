@@ -40,6 +40,7 @@ def deal_cells():
             s = BeautifulSoup(str(c), "html.parser")
             p = s.find("img")["src"]
             t = s.find("h2").text
+            t = t.replace("/", "|")
             st = list(s.strings)[-1].strip()
             n_url = s.find("a")['href']
             ct, p = yield from get_content(n_url)
