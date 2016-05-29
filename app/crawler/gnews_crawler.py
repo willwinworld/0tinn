@@ -47,6 +47,8 @@ def deal_cells():
             pic = p
         t = s.find("h3", class_="article-name").text
         t = t.replace("/", "|")
+        t = t.replace("&", "and")
+        t = t.replace("?", " ")
         st = s.find("p", class_="synopsis").text
         n_url = s.find("a")['href']
         ct = yield from get_content(n_url)
