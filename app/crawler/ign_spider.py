@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from manager import app
 from app.game.models import Popular_games
 
-url = "http://www.ign.com/"
+url = "http://www.ign.com/?setccpref=US"
 headers = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 "Accept-Encoding":"gzip, deflate, sdch",
 "Accept-Language":"zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4",
@@ -64,15 +64,22 @@ def save(label, name, ds, rank):
         g = Popular_games.query.filter_by(label=label).filter_by(rank=rank).first()
         if g is None:
             g = Popular_games(name, ds, label, rank)
-            g.save()
+            try:
+                g.save()
+                return True
+            except:
+                return False
         else:
             if g.name == name:
                 return True
             else:
                 g.name = name
                 g.ds = ds
-                g.save()
-                return True
+                try:
+                    g.save()
+                    return True
+                except:
+                    return False
 
 
 def run_ign():
