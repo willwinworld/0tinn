@@ -37,9 +37,9 @@
                     </div>
                 </div>
             <div class="form-group">
-                <div id="embed-captcha"></div>
-                <p id="wait" class="show">Loading verification code....</p>
-                <p id="notice" class="hide">Please drag the code to the appropriate location</p>
+                <div class="col-lg-10 col-lg-offset-2">
+                    {{ form.recaptcha }}
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-lg-10 col-lg-offset-2">
@@ -50,11 +50,4 @@
         </fieldset>
     </form>
     </div>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script>
-    var handlerEmbed=function(captchaObj){$("#embed-submit").click(function(e){var validate=captchaObj.getValidate();if(!validate){$("#notice")[0].className="show";setTimeout(function(){$("#notice")[0].className="hide"},2000);e.preventDefault()}});captchaObj.appendTo("#embed-captcha");captchaObj.onReady(function(){$("#wait")[0].className="hide"})};$.ajax({url:"/register?t="+(new Date()).getTime(),type:"get",dataType:"json",success:function(data){initGeetest({gt:data.gt,challenge:data.challenge,product:"embed",offline:!data.success},handlerEmbed)}});
-    </script>
 {% endblock %}

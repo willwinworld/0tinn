@@ -82,3 +82,6 @@ def run_gnews():
     loop = asyncio.get_event_loop()
     loop.run_until_complete(deal_cells())
     loop.close()
+
+
+run_gnews()

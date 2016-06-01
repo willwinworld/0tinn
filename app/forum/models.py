@@ -20,18 +20,16 @@ class Topic(db.Model):
     date_created = db.Column(db.DateTime, default=now_time())
     vote = db.Column(db.Integer, default=0)
     click_rate = db.Column(db.Integer, default=1)
-    music_chain = db.Column(db.String(255), nullable=False)
     last_reply = db.Column(db.String(200))
     last_active = db.Column(db.DateTime, default=now_time())
 
     def __repr__(self):
         return "<{} {}>".format(self.__class__.__name__, self.id)
 
-    def __init__(self, title, content, user_id, music_chain, label):
+    def __init__(self, title, content, user_id,label):
         self.title = title
         self.content = content
         self.user_id = user_id
-        self.music_chain = music_chain
         self.label = label
 
         self.username = self.get_user().username
@@ -41,16 +39,8 @@ class Topic(db.Model):
         global topics
         if label == "new":
             topics = Topic.query.order_by(Topic.date_created.desc()).paginate(page, 30, False)
-        elif label == "cn":
-            topics = Topic.query.filter_by(label="国语").order_by(Topic.last_active.desc()).paginate(page, 30, False)
-        elif label == "en":
-            topics = Topic.query.filter_by(label="欧美").order_by(Topic.last_active.desc()).paginate(page, 30, False)
-        elif label == "jk":
-            topics = Topic.query.filter_by(label="日韩").order_by(Topic.last_active.desc()).paginate(page, 30, False)
-        elif label == "ins":
-            topics = Topic.query.filter_by(label="纯音乐").order_by(Topic.last_active.desc()).paginate(page, 30, False)
         else:
-            topics = Topic.query.filter_by(label="其它").order_by(Topic.last_active.desc()).paginate(page, 30, False)
+            topics = Topic.query.filter_by(label=label).order_by(Topic.last_active.desc()).paginate(page, 30, False)
         return topics
 
     @classmethod

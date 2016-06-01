@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, render_template, session, request, redirect, flash, url_for, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
-from geetest import GeetestLib
 from app.email import send_confirm_email, send_reset_email
 from app.message.models import Message, Pri_letter
 from app.message.forms import LetterForm
@@ -46,61 +45,39 @@ def signup():
         flash('Already sign in', 'info')
         return redirect('/')
     form = SignupForm()
-    gt = GeetestLib(captcha_id, private_key)
     if form.validate_on_submit():
-        challenge = request.form[gt.FN_CHALLENGE]
-        validate = request.form[gt.FN_VALIDATE]
-        seccode = request.form[gt.FN_SECCODE]
-        status = session[gt.GT_STATUS_SESSION_KEY]
-        user_id = session["user_id"]
-        if status:
-            result = gt.success_validate(challenge, validate, seccode, user_id)
-        else:
-            result = gt.failback_validate(challenge, validate, seccode)
-        if result:
-            user = form.save()
-            try:
-                send_confirm_email(user, user.set_token())
-            except:
-                print('send email failed!')
-            login_user(user)
-            flash('Sign up success, do not to your email to check mail', 'success')
-            return redirect("/")
+        user = form.save()
+        try:
+            send_confirm_email(user, user.set_token())
+        except:
+            print('send email failed!')
+        login_user(user)
+        flash('Sign up success, do not to your email to check mail', 'success')
+        return redirect("/")
     return render_template('user/signup.html', form=form)
 
 
 @member.route('/login', methods=['GET', 'POST'])
 def login():
-    gt = GeetestLib(captcha_id, private_key)
     if current_user.is_authenticated:
         flash('Already sign in', "info")
         return redirect("/")
     form = LoginForm()
     if form.validate_on_submit():
-        challenge = request.form[gt.FN_CHALLENGE]
-        validate = request.form[gt.FN_VALIDATE]
-        seccode = request.form[gt.FN_SECCODE]
-        status = session[gt.GT_STATUS_SESSION_KEY]
-        user_id = session["user_id"]
-        if status:
-            result = gt.success_validate(challenge, validate, seccode, user_id)
+        user, authonticated = Member.authenticate(form.email.data, form.password.data)
+        if authonticated:
+            login_user(user, form.remeber_me.data)
+            return redirect("/")
         else:
-            result = gt.failback_validate(challenge, validate, seccode)
-        if result:
-            user, authonticated = Member.authenticate(form.email.data, form.password.data)
-            if authonticated:
-                login_user(user, form.remeber_me.data)
-                return redirect("/")
-            else:
-                flash("email or password not correct", 'warning')
-    return render_template('user/login.html',form=form)
+            flash("email or password not correct", 'warning')
+    return render_template('user/login.html', form=form)
 
 
 @member.route('/signout', methods=['GET', 'POST'])
 @login_required
 def signout():
     logout_user()
-    return redirect("/")
+    return ""
 
 
 @member.route("/forget", methods=["GET", "POST"])
@@ -119,17 +96,6 @@ def forget():
     return render_template("user/forget.html")
 
 
-@member.route('/register', methods=["GET"])
-def get_captcha():
-    user_id = 'test'
-    gt = GeetestLib(captcha_id, private_key)
-    status = gt.pre_process(user_id)
-    session[gt.GT_STATUS_SESSION_KEY] = status
-    session["user_id"] = user_id
-    response_str = gt.get_response_str()
-    return response_str
-
-
 @member.route('/confirm/<token>', methods=['GET', 'POST'])
 @login_required
 def confirm(token):
@@ -146,21 +112,10 @@ def reset_pw(email, token):
     form = ResetpwForm()
     user = Member.query.filter_by(email=email).first()
     if user.confirm(token):
-        gt = GeetestLib(captcha_id, private_key)
         if form.validate_on_submit():
-            challenge = request.form[gt.FN_CHALLENGE]
-            validate = request.form[gt.FN_VALIDATE]
-            seccode = request.form[gt.FN_SECCODE]
-            status = session[gt.GT_STATUS_SESSION_KEY]
-            user_id = session["user_id"]
-            if status:
-                result = gt.success_validate(challenge, validate, seccode, user_id)
-            else:
-                result = gt.failback_validate(challenge, validate, seccode)
-            if result:
-                user.set_pw(form.password.data)
-                flash('Reset success', 'success')
-                return redirect(url_for(".login"))
+            user.set_pw(form.password.data)
+            flash('Reset success', 'success')
+            return redirect(url_for(".login"))
     return render_template("user/resetpw.html", form=form, r_token=token, r_email=email)
 
 

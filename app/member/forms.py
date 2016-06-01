@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
-from flask_wtf import Form
-from flask_wtf.file import FileAllowed, FileField
+from flask_wtf import Form, RecaptchaField
 from wtforms import StringField, PasswordField, TextAreaField, RadioField, SubmitField, BooleanField
-from wtforms.validators import (Length, DataRequired, InputRequired, Email, EqualTo, ValidationError, URL)
+from wtforms.validators import (Length, DataRequired, InputRequired, Email, EqualTo, ValidationError)
 from .models import Member
 
 
@@ -13,6 +12,7 @@ class SignupForm(Form):
     password = PasswordField('Password',
                              validators=[InputRequired(), EqualTo('confirm_password', message="Password must match.")])
     confirm_password = PasswordField('Confirm password')
+    recaptcha = RecaptchaField()
     submit = SubmitField('Sign up')
 
     def validate_username(self, field):
@@ -35,7 +35,7 @@ class SignupForm(Form):
 class LoginForm(Form):
     email = StringField('Username', validators=[DataRequired(message="还没有填写邮箱")])
     password = PasswordField('Password', validators=[DataRequired(message='还没有填写密码')])
-    remeber_me = BooleanField('Remeber', default=False)
+    remeber_me = BooleanField('Remeber', default=True)
     submit = SubmitField('Sign in')
 
 
@@ -50,4 +50,5 @@ class SettingForm(Form):
 class ResetpwForm(Form):
     password = PasswordField("New password", validators=[InputRequired(), EqualTo('confirm_password', message="Password must match.")])
     confirm_password = PasswordField('Confirm password')
+    recaptcha = RecaptchaField()
     submit = SubmitField("Confirm")

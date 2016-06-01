@@ -3,6 +3,7 @@ import json
 import requests
 import re
 import time
+from bs4 import BeautifulSoup
 from math import log2
 from datetime import datetime, timedelta
 from app.extensions import redis_store
@@ -94,4 +95,8 @@ def is_discuss(s):
         return None
     return result
 
-
+def get_sentence():
+    response = requests.get('http://www.iciba.com/')
+    soup = BeautifulSoup(response.text, 'html.parser')
+    st = soup.find('p', class_='en').text
+    return st

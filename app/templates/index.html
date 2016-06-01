@@ -1,97 +1,700 @@
-{% extends 'base.html' %}
-{% import "_macros.html" as macro %}
+{% extends "bootstrap/base.html" %}
 
-{% block main %}
-    <div class="sep20"></div>
-    <div class="sep20"></div>
-    <div class="panel panel-default">
-    <div class="box">
-        <ul class="nav nav-pills">
-            <li id="new">
-                <a href="/?tab=new" class="tab">Lastest</a>
-            </li>
-            <li id="cn">
-                <a href="/?tab=cn" class="tab">Chinese</a>
-            </li>
-            <li id="en">
-                <a href="/?tab=en" class="tab">English</a>
-            </li>
-            <li id="jk">
-                <a href="/?tab=jk" class="tab">Japan and South Korea</a>
-            </li>
-            <li id="ins">
-                <a href="/?tab=ins" class="tab">Instrumental Music</a>
-            </li>
-            <li id="other">
-                <a href="/?tab=other" class="tab">Other</a>
-            </li>
-        </ul>
-    </div>
-        <ul class="list-group">
-                            {% for topic in topics %}
-                                <li class="list-group-item cell">
-                                  <div class="media">
-                                      <div class="media-left">
-                                          <a href="/member/{{ topic.get_user().username }}">
-                                              <img class="media-object" src="{{ topic.get_user().avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
-                                          </a>
-                                      </div>
-                                      <div class="media-body">
-                                            <a href="/topic/{{ topic.id }}"><h5 class="media-heading" itemscope itemtype="http://schema.org/Article">{{ topic.title }}</h5></a>
-                                            <p>
-                                                <span class="label label-primary">{{ topic.label }}</span>&nbsp; &hearts; &nbsp;
-                                                <strong>{{ topic.username }}</strong>&nbsp; &hearts; &nbsp;
-                                                <span class="text-muted">{{ moment(topic.date_created, local=True).fromNow() }}</span>&nbsp; &bull; &nbsp;
-                                                {% if topic.last_reply %}
-                                                    <span class="text-muted">last reply from <strong>{{ topic.last_reply }}</strong></span>
-                                                {% endif %}
-                                            </p>
-                                     </div>
-                                      <div class="media-right">
-                                          <span class="badge">{{ topic.reply_num }}</span>
-                                      </div>
-                                  </div>
-                              </li>
-                              {% endfor %}
-                            <li class="list-group-item cell"><i class="fa fa-angle-double-right"></i> <a href="/{{ tab }}">More about</a></li>
-            </ul>
-    </div>
+{% block title %}
+    0Tinn -- 0Tinn
+{% endblock %}
+{% block metas %}
+    {{ super() }}
+    <meta name=keywords content="Community Game News gaming strategy">
+    <meta charset="utf-8">
 {% endblock %}
 
-{% block side %}
-    <div class="panel panel-default">
-          <div class="panel-heading">
-            <sapn class="text-muted">Hot</sapn>
-          </div>
-          <div class="panel-body hot-panel">
-            <table class="hot-list table table-striped table-hover">
-            {% if hot_topics[0] != none %}
-              {% for t in hot_topics %}
-                  <tbody>
-                    <tr>
-                        <td width="5%">
-                            <a href="/member/{{ t.get_user().username }}">
-                               <img class="media-object" src="{{ t.get_user().avatar }}" data-holder-rendered="true" style="width: 24px; height: 24px;">
-                            </a>
-                        </td>
-                        <td>
-                            <a href="/topic/{{ t.id }}">{{ t.title }}</a>
-                        </td>
-                    </tr>
-                  </tbody>
-              {% endfor %}
-            {% endif %}
-            </table>
-          </div>
-    </div>
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/style.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/preset.css") }}" id="preset" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/cs-select.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/flexslider.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/nanoscroller.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/responsive.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/owl.carousel.css") }}">
+    <link href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="icon" href="{{ url_for("static", filename="favicon.ico") }}">
+    {{ moment.include_jquery(version='3.0.0-alpha1', local_js="http://libs.cdnjs.net/jquery/3.0.0-alpha1/jquery.min.js") }}
+    {{ moment.include_moment(version='2.12.0', local_js="http://libs.cdnjs.net/moment.js/2.12.0/moment.min.js") }}
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-74862228-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+{% endblock %}
+
+{% block body_attribs %}
+    class="sticky-header"
+{% endblock %}
+{% block content %}
+
+		<!--==================================
+		=            START Header            =
+		===================================-->
+		<header>
+			<!-- top-bar -->
+			<div id="newedge-top-bar">
+				<div class="container">
+					<div class="row">
+						<div id="logo" class="col-xs-4 col-sm-3 col-md-3 hidden-sm hidden-xs">
+							<a href="/"><img src="{{ url_for("static", filename="0tinn.png") }}" alt="logo"></a>
+						</div> <!-- //logo -->
+						<div class="col-sm-12 col-md-9">
+							<div class="top-right">
+								<div class="newedge-date">
+									<span>	{{ moment().format("dddd, MMMM Do YYYY, H:mm:ss", refresh=True) }}</span>
+								</div> <!-- //date -->
+								<div class="newedge-login">
+                                    {% if current_user.is_authenticated %}
+                                        <a href="/member/{{ current_user.username }}" role="button">
+                                            {{ current_user.username }}
+                                        </a>
+                                    {% else %}
+									<a href="#" role="button" data-toggle="modal" data-target="#login">
+										<i class="fa fa-user"></i>
+									</a>
+                                    {% endif %}
+									<!-- Login modal -->
+									<div id="login" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog">
+											<!-- Modal content-->
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
+													<h1 class="text-left">Log in</h1>
+												</div>
+												<div class="modal-body">
+													<form action="/login" method="post" id="login-form">
+														<fieldset class="userdata">
+                                                            {{ login_form.hidden_tag() }}
+                                                            {{ login_form.email(placeholder="Email",type="text",class="form-control") }}
+                                                            {{ login_form.password(placeholder="Password",class="form-control") }}
+															<div class="remember-wrap">
+																{{ login_form.remeber_me(class="inputbox", value="yes") }}
+																<label for="remember">Remember Me</label>
+															</div>
+															<div class="button-wrap pull-left">
+																{{ login_form.submit(class="btn btn-block btn-success",value="Log in") }}
+															</div>
+															<p class="forget-name-link pull-left">
+																Forgot <a href="/forget">
+																Password</a>
+															</p>
+														</fieldset>
+													</form>
+												</div> <!--/Modal body-->
+												<div class="modal-footer">
+													New Here? <a href="/signup">
+													Create an account</a>
+												</div> <!--/Modal footer-->
+											</div> <!-- Modal content-->
+										</div> <!-- /.modal-dialog -->
+									</div> <!-- //Login modal -->
+								</div> <!-- //login -->
+								<div class="newedge-search">
+									<div class="search-icon-wrapper">
+										<i class="fa fa-search"></i>
+									</div>
+									<div class="search-wrapper">
+										<form action="/search" method="post">
+											<input name="search_text" maxlength="200" class="inputboxnewedge-top-search" type="text" size="20" placeholder="Search ...">
+											<i id="search-close" class="fa fa-close"></i>
+										</form>
+									</div> <!-- //search-wrapper -->
+								</div> <!-- //search -->
+							</div> <!-- //top-right -->
+						</div>
+					</div> <!-- //row -->
+				</div> <!-- //container -->
+			</div> <!-- //top-bar -->
+
+			<!-- navigation mobile version -->
+			<div id="mobile-nav-bar" class="mobile-nav-bar">
+				<div class="container">
+					<div class="row">
+						<div class="visible-sm visible-xs col-sm-12">
+							<div id="logo" class="mobile-logo pull-left">
+								<a href="forum/index.html"><img src="{{ url_for("static",filename="0tinn.png") }}" alt="logo"></a>
+							</div>
+							<a id="offcanvas-toggler" class="pull-right" href="#"><i class="fa fa-bars"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- navigation -->
+			<nav id="navigation-bar" class="navigation hidden-sm hidden-xs">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12">
+							<ul class="list-inline megamenu-parent">
+								<li>
+									<a href="/">Home</a>
+								</li>
+								<li><a href="/g">News</a></li>
+								<li><a href="/forum">Forum</a></li>
+                                {% if current_user.is_authenticated %}
+                                    <li class="has-child pull-right">
+                                        <a href="/member/{{ current_user.username }}">{{ current_user.username }}</a>
+                                        <div class="dropdown-inner">
+                                            <ul class="dropdown-items">
+                                                <li><a href="/setting">Setting</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="/signout">Log out</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                {% else %}
+								    <li class="pull-right"><a href="#" data-toggle="modal" data-target="#login">Log in?</a></li>
+                                {% endif %}
+							</ul>
+						</div> <!-- col-sm-12 -->
+					</div> <!-- //row -->
+				</div> <!-- //container -->
+			</nav> <!-- //navigation -->
+		</header>
+		<!--====  End of Header  ====-->
+{% block start %}
+        <!--==================================
+		=            START SLIDER            =
+		===================================-->
+		<section class="newedge-slider img-overlay">
+			<div class="newedge-slider-content">
+				<div id="main-slider" class="carousel slide" data-ride="carousel">
+					<div class="container visible-lg visible-md">
+						<div class="main-slider-indicators ">
+						 	<div class="nano">
+						 		<div class="content">
+						 			<ul class="main-slider-indicators-inner carousel-indicators" tabindex="0">
+						 				<li data-target="#main-slider" data-slide-to="0" class="text-right active">
+						 					<p class="slide2-type"> <span class="cat-icon cat-icon-color01"> N</span>News</p>
+						 					<p class="indicators-title"> {{ hot_news[0].title }} </p>
+						 				</li>
+						 				<li data-target="#main-slider" data-slide-to="1" class="text-right">
+						 					<p class="slide2-type"> <span class="cat-icon cat-icon-color02"> N</span>News</p>
+						 					<p class="indicators-title"> {{ hot_news[1].title }} </p>
+						 				</li>
+						 				<li data-target="#main-slider" data-slide-to="2" class="text-right">
+						 					<p class="slide2-type"> <span class="cat-icon cat-icon-color03"> N</span>News</p>
+						 					<p class="indicators-title"> {{ hot_news[2].title }} </p>
+						 				</li>
+						 			</ul>
+						 		</div>
+						 	</div>
+						 </div> <!-- //carousel-indicators -->
+					</div> <!-- //container -->
+
+					<div class="carousel-inner" role="listbox">
+						<div class="item active" style="background-image: url({{ hot_news[0].pic }})">
+							<div class="item-overlay"> </div>
+							<div class="container">
+								<div class="row">
+									<div class="col-md-6 col-sm-12 next-post">
+										<div class="next-post-wrapper">
+											<div>
+												<p class="slide-cat">
+													<a href=""><span class="cat-icon cat-icon-color01"> N</span>News</a>
+												</p>
+												<h2 class="slide-title">
+													<a href="/g/{{ hot_news[0].title }}">{{ hot_news[0].sentence }}</a>
+												</h2>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="item" style="background-image: url({{ hot_news[1].pic }});">
+							<div class="item-overlay"> </div>
+							<div class="container">
+								<div class="row">
+									<div class="col-md-6 col-sm-12 next-post">
+										<div class="next-post-wrapper">
+											<div>
+												<p class="slide-cat">
+													<a href=""><span class="cat-icon cat-icon-color02"> N</span>News</a>
+												</p>
+												<h2 class="slide-title">
+													<a href="/g/{{ hot_news[1].title }}">{{ hot_news[1].sentence }}</a>
+												</h2>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="item" style="background-image: url({{ hot_news[2].pic }});">
+							<div class="item-overlay"> </div>
+							<div class="container">
+								<div class="row">
+									<div class="col-md-6 col-sm-12 next-post">
+										<div class="next-post-wrapper">
+											<div>
+												<p class="slide-cat">
+													<a href="">
+														<span class="cat-icon cat-icon-color03"> N</span>News
+													</a>
+												</p>
+												<h2 class="slide-title">
+													<a href="/g/{{ hot_news[2].title }}">{{ hot_news[2].sentence }}</a>
+												</h2>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> <!-- //carousel-inner -->
+
+					<!-- Navigation for mobile device -->
+					<div class="container visible-sm visible-xs">
+						<div class="customNavigation carousel-controls">
+							<a class="left" data-target="#main-slider" role="button" data-slide="prev"><i class="fa fa-angle-left"></i></a>
+							<a class="right" data-target="#main-slider" role="button" data-slide="next"><i class="fa fa-angle-right"></i></a>
+						</div>
+					</div>
+				</div>
+			</div> <!-- //newedge-slider-content -->
+		</section>
+		<!--====  End of SLIDER  ====-->
+{% endblock %}
+		<!--==================================
+		=            START MAIN WRAPPER      =
+		===================================-->
+		<section class="main-wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-9">
+{% block main %}
+                            <!-- Latest News -->
+						<div class="newedge-latest-news">
+							<div class="section-title">
+								<h3> <span class="cat-icon"><i class="fa fa-bell-o"></i></span>Latest News</h3>
+							</div> <!-- //section-title -->
+
+							<div class="row">
+								<div class="col-md-8">
+									<!-- article-slider -->
+									<div id="article-slider" class="owl-carousel">
+                                        {% for i in news_index[:3] %}
+										<article class="item leading-item gradient-major">
+											<div class="article-inner">
+												<div class="overlay"></div>
+												<div class="img-wrapper"><img class="img-leading latest-post-image" src="{{ i.pic }}" alt="img"></div>
+												<div class="article-info">
+													<p class="slide-cat">
+														<a href="">
+															<span class="cat-icon cat-icon-color01"> N</span>News
+														</a>
+													</p>
+													<h4 class="entry-title">
+														<a href="/g/{{ i.title }}">{{ i.title }}</a>
+													</h4>
+												</div>
+											</div>
+										</article>
+										{% endfor %}
+									</div> <!-- //article-slider -->
+								</div> <!-- //col-md-8 -->
+
+								<div class="col-md-4 col-sm-6">
+									<article class="gradient-color02">
+										<div class="article-inner">
+											<div class="overlay"></div>
+											<div class="img-wrapper"><img class="img-100p latest-post-image" src="{{ news_index[3].pic }}"></div>
+											<div class="article-info">
+												<p class="slide-cat">
+													<a href="">
+														<span class="cat-icon cat-icon-color09"> N</span>News
+													</a>
+												</p>
+												<h4 class="entry-title">
+													<a href="/g/{{ news_index[3].title }}">{{ news_index[3].title }}</a>
+												</h4>
+											</div>
+										</div>
+									</article>
+								</div> <!-- //col-md-4 col-sm-6 -->
+
+								<div class="col-md-4 col-sm-6">
+									<article class="gradient-color03">
+										<div class="article-inner">
+											<div class="overlay"></div>
+											<div class="img-wrapper"><img class="img-100p latest-post-image" src="{{ news_index[4].pic }}"></div>
+											<div class="article-info">
+												<p class="slide-cat">
+													<a href="">
+														<span class="cat-icon cat-icon-color04"> N</span>News
+													</a>
+												</p>
+												<h4 class="entry-title">
+													<a href="/g/{{ news_index[4].title }}">{{ news_index[4].title }}</a>
+												</h4>
+											</div>
+										</div>
+									</article>
+								</div> <!-- //col-md-4 col-sm-6 -->
+							</div> <!-- //row -->
+
+							<div class="row">
+								<div class="col-sm-4">
+									<article class="gradient-color04">
+										<div class="article-inner">
+											<div class="overlay"></div>
+											<div class="img-wrapper"><img class="img-100p latest-post-image" src="{{ news_index[5].pic }}"></div>
+											<div class="article-info">
+												<p class="slide-cat">
+													<a href="">
+														<span class="cat-icon cat-icon-color08"> N</span>News
+													</a>
+												</p>
+												<h4 class="entry-title">
+													<a href="/g/{{ news_index[5].title }}">{{ news_index[5].title }}</a>
+												</h4>
+											</div>
+										</div>
+									</article>
+								</div> <!-- //col-sm-4 -->
+
+								<div class="col-sm-4">
+									<article class="gradient-color05">
+										<div class="article-inner">
+											<div class="overlay"></div>
+											<div class="img-wrapper"><img class="img-100p latest-post-image" src="{{ news_index[6].pic }}"></div>
+											<div class="article-info">
+												<p class="slide-cat">
+													<a href="">
+														<span class="cat-icon cat-icon-color06"> N</span>News
+													</a>
+												</p>
+												<h4 class="entry-title">
+													<a href="/g/{{ news_index[6].title }}">{{ news_index[6].title }}</a>
+												</h4>
+											</div>
+										</div>
+									</article>
+								</div> <!-- //col-sm-4 -->
+
+								<div class="col-sm-4">
+									<article class="gradient-color05">
+										<div class="article-inner">
+											<div class="overlay"></div>
+											<div class="img-wrapper"><img class="img-100p latest-post-image" src="{{ news_index[7].pic }}"></div>
+											<div class="article-info">
+												<p class="slide-cat">
+													<a href="">
+														<span class="cat-icon cat-icon-color06"> N</span>News
+													</a>
+												</p>
+												<h4 class="entry-title">
+													<a href="/g/{{ news_index[7].title }}">{{ news_index[7].title }}</a>
+												</h4>
+											</div>
+										</div>
+									</article>
+								</div> <!-- //col-sm-4 -->
+							</div> <!-- //row -->
+						</div>
+						<!-- //Latest News -->
+
+						<!-- Social Media Category -->
+						<div class="single-article-category simple-article-overlay gradient-color10">
+							<div class="section-title">
+								<h3 class="pull-left"> <span class="cat-icon cat-icon-color07">N</span>News</h3>
+								<div class="pull-right see-all">
+									<a href="/g">See all</a>
+								</div>
+							</div> <!-- //section-title -->
+
+							<div class="row">
+                                {% for n in range(11) %}
+								<div class="col-sm-4">
+                                    {% for i in news[n*3:(n + 1)*3] %}
+									<article>
+										<div class="article-inner">
+											<div class="overlay"></div>
+											<div class="img-wrapper"><img class="img-100p latest-post-image" src="{{ i.pic }}" alt="img"></div>
+											<div class="article-info">
+												<h4 class="entry-title">
+													<a href="/g/{{ i.title }}">{{ i.title }}</a>
+												</h4>
+											</div>
+										</div>
+									</article>
+                                    {% endfor %}
+								</div> <!-- //col-sm-4 -->
+                                {% endfor %}
+							</div> <!-- //row -->
+						</div>
+						<!-- //Social Media Category -->
+{% endblock %}
+						<!-- Advertisement one -->
+						<div class="advertisement mtb30">
+							<div class="row">
+								<div class="col-sm-12">
+									<img src="" alt="advertisement">
+								</div>
+							</div>
+						</div> <!-- //Advertisement one -->
+                    </div> <!-- //col-sm-9 -->
+					<div class="col-sm-3">
+						<!-- popular-news -->
+						<div class="popular-news">
+							<div class="section-title">
+								<h3> <span class="cat-icon"><i class="fa fa-pencil"></i></span>Popular Games</h3>
+							</div> <!-- //section-title -->
+
+							<table class="table">
+                                <tbody>
+                                {% for i in get_value("topgames") %}
+                                    <tr>
+                                        <td>{{ i.rank }}</td>
+                                        <td>{{ i.name }}</td>
+                                        <td><span class="cat-icon cat-icon-color01"> {{ i.date_or_score }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+						</div> <!-- //popular-news -->
+                        {% if current_user.is_authenticated %}
+                         <div class="panel panel-default">
+                          <div class="panel-body">
+                            <div class="media">
+                              <div class="media-left">
+                                <a href="/member/{{ current_user.username }}">
+                                    <img class="media-object" src="{{ current_user.avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
+                                </a>
+                              </div>
+                              <div class="media-body">
+                                <h5 class="media-heading">{{ current_user.username }}</h5>
+                                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                      <tbody>
+                                        <tr>
+                                            <td width="33%" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>{{ session.get('my_topic_num') }}</h5><span class="text-muted">My &nbsp;&nbsp;&nbsp;topics</span></a></td>
+                                            <td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>0</h5><span class="text-muted">Topic collections</span></a></td>
+                                            <td width="33%" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>{{ session.get("following_nums") }}</h5><span class="text-muted">Special attention</span></a></td>
+                                        </tr>
+                                    </tbody>
+                                  </table>
+                              </div>
+                            </div>
+                                  <hr>
+                                  <h5><a href="/post"><i class="fa fa-pencil" aria-hidden="true">New topic</i></a></h5>
+                                  <hr>
+                                  <a href="/member/{{ current_user.username }}"> <span style="color:red">{{ session.get("msg_num") }}</span> tips unread</a>
+                              {% if current_user.is_check_in %}
+                                  <a href="/balance"><span class="pull-right"><strong>{{ current_user.wealth }}</strong> <i class="fa fa-music" aria-hidden="true"></i></span></a>
+                              {% else %}
+                                  <button class="btn-default btn pull-right" onclick="check_in()">Check in</button>
+                              {% endif %}
+                          </div>
+                        </div>
+                         {% else %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <span class="text-muted"> Registered is more exciting </span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="text-center">
+                                        <a href="/signup"><button class="btn btn-default">Join us</button> </a>
+                                        <p></p>
+                                        <p>or you want to <a href="/login">sign in</a> </p>
+                                    </div>
+                                </div>
+                            </div>
+                         {% endif %}
+						<!-- Advertisement sidebar 01 -->
+						<div class="advertisement mtb30 mtt30">
+							<div class="row">
+								<div class="col-sm-12">
+                                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                        <!-- 0tinn_second -->
+                                        <ins class="adsbygoogle"
+                                             style="display:block"
+                                             data-ad-client="ca-pub-9642706590148415"
+                                             data-ad-slot="2464502080"
+                                             data-ad-format="auto"></ins>
+                                        <script>
+                                        (adsbygoogle = window.adsbygoogle || []).push({});
+                                        </script>
+								</div>
+							</div>
+						</div> <!-- //Advertisement sidebar 01-->
+
+
+                        <!-- Comming Soon -->
+                        <div class="popular-news">
+							<div class="section-title">
+								<h3> <span class="cat-icon"><i class="fa fa-bell" aria-hidden="true"></i></span>Upcoming</h3>
+							</div>
+                            <table class="table">
+                                <tbody>
+                                {% for i in get_value("upcoming") %}
+                                    <tr>
+                                        <td>{{ i.rank }}</td>
+                                        <td>{{ i.name }}</td>
+                                        <td><span class="text-muted"> {{ i.date_or_score }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+						<!-- Advertisement sidebar 02 -->
+						<div class="advertisement mtb30 mtt10">
+							<div class="row">
+								<div class="col-sm-12">
+									<img src="" class="img-100p" alt="advertisement">
+								</div>
+							</div>
+						</div> <!-- //Advertisement sidebar 02-->
+
+						<!-- Latest Comments -->
+						<div class="latest-comments mtt30">
+							<div class="section-title">
+								<h3> <span class="cat-icon"><i class="fa fa-comment-o"></i></span>Recent Comments</h3>
+							</div> <!-- //section-title -->
+                            {% for i in get_value("recent_reply") %}
+							<div class="latest-comment">
+								<p>"{{ i.content }}"</p>
+								<div class="media">
+									<div class="latest-comments-image media-left">
+										<img src="{{ i.get_user().avatar }}" alt="comment">
+									</div>
+									<div class="latest-comment-wrap media-body">
+										<span class="latest-comments-user">{{ i.username }}</span><span class="latest-comments-date">{{ moment(i.date_created).format("MMMM Do YYYY") }}</span>
+									</div>
+								</div>
+							</div>
+                            {% endfor %}
+						</div> <!-- //Latest Comments -->
+
+					</div> <!-- //col-sm-3 -->
+				</div> <!-- //row -->
+			</div> <!-- //container -->
+		</section>
+		<!--====  End of MAIN WRAPPER  ====-->
+
+		<!--==================================
+		=            START FOOTER            =
+		===================================-->
+		<footer>
+			<div class="footer-wrapper">
+				<div class="container">
+					<div class="row">
+						<div id="bottom1" class="col-sm-6 col-md-3">
+							<p class="footer-logo"><img src="{{ url_for("static",filename="0tinn.png") }}" alt="logo"></p>
+							<p class="footer-info">{{ session.get("sentence") }}</p>
+							<div class="footer-contact">
+								<p>
+									<span>Email:</span>
+									seagullsay3@yahoo.com
+								</p>
+							</div>
+						</div> <!-- //bottom1 -->
+
+						<div id="bottom2" class="col-sm-6 col-md-3">
+							<div class="bottom-menu">
+								<h3 class="title">Quick Link</h3>
+								<div class="pull-left">
+									<ul class="menu">
+										<li><a href="/">Home</a></li>
+										<li><a href="/about">About</a></li>
+										<li><a href="/advertise">Advertisement</a></li>
+										<li><a href="/faq">FAQ</a></li>
+										<li><a href="/forum">Forum</a></li>
+									</ul>
+								</div>
+							</div>
+						</div> <!-- //bottom2 -->
+
+						<div id="bottom3" class="col-sm-6 col-md-3">
+							<div class="">
+								<h3 class="title">Tag Cloud</h3>
+								<div class="tags">
+									<span class="tag-name">Game</span>
+									<span class="tag-name">News</span>
+									<span class="tag-name">Forum</span>
+									<span class="tag-name">Art</span>
+								</div>
+							</div>
+						</div> <!-- //bottom3 -->
+                        <div id="bottom1" class="col-sm-6 col-md-3">
+							<p class="footer-info">All about game news is crawler collected from internet, if here have some one infringe on your rights, please contact me.</p>
+						</div>
+					</div> <!-- //row -->
+				</div>  <!-- //container -->
+			</div> <!-- //footer-wrapper -->
+
+			<div class="copyright-wrapper">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-6 col-md-6">
+							<p class="copyright"> Copyright © 2016 0Tinn,All rights reserved.</p>
+						</div>
+                        <div class="col-sm-6 col-md-6 pull-right">
+							<p><span><strong>{{ session.get("online_nums") }}</strong> users on line</span>&nbsp;<span class="text-muted small"> Topest {{ session.get("highest_online_num") }} users</span></p>
+						</div>
+					</div>  <!-- //row -->
+				</div> <!-- //container -->
+			</div> <!-- //copyright-wrapper -->
+		</footer>
+		<!--====  End of FOOTER  ====-->
+
+		<!-- Offcanvas Start-->
+		<div class="offcanvas-overlay"></div>
+		<div class="offcanvas-menu visible-sm visible-xs">
+			<a href="#" class="close-offcanvas"><i class="fa fa-remove"></i></a>
+			<div class="offcanvas-inner">
+				<h3 class="title">Search</h3>
+				<div class="search">
+					<form action="/search" method="post">
+						<input name="search_text" maxlength="200" class="inputbox search-query" type="text" placeholder="Search ...">
+					</form>
+				</div>
+				<ul>
+					<li>
+						<a href="/">Home</a>
+					</li>
+					<li><a href="/g">News</a></li>
+					<li><a href="/forum">Forum</a></li>
+					{% if current_user.is_authenticated %}
+                    <li class="has-child">
+                        <a href="/member/{{ current_user.username }}">{{ current_user.username }}</a>
+                        <span role="button" class="offcanvas-menu-toggler collapsed" data-toggle="collapse" data-target="#collapse-menu-01" aria-expanded="false" aria-controls="collapse-menu-01"><i class="fa fa-plus"></i><i class="fa fa-minus"></i></span>
+						<ul class="collapse" id="collapse-menu-01" aria-expanded="false">
+							<li><a href="/setting">Setting</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/signout">Log out</a></li>
+						</ul>
+                    </li>
+                    {% else %}
+					<li><a href="#" data-toggle="modal" data-target="#login">Log in?</a></li>
+                    {% endif %}
+				</ul>
+			</div>
+		</div>
+		<!-- end Offcanvas -->
+    <!-- //body-innerwrapper -->
+
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script>
-        $(document).ready(function () {
-           var tab = "{{ tab }}";
-            $("#"+tab).addClass("active");
-    })
-    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.4/SmoothScroll.min.js"></script>
+    <script type="text/javascript" src="http://o6yh09bxd.bkt.clouddn.com/owl.carousel.min.js" ></script>
+    <script type="text/javascript" src="http://o6yh09bxd.bkt.clouddn.com/main.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sticky/1.0.3/jquery.sticky.min.js"></script>
+    <script type="text/javascript" src="http://o6yh09bxd.bkt.clouddn.com/jquery.nanoscroller.js" ></script>
+    <script type="text/javascript" src="http://o6yh09bxd.bkt.clouddn.com/jquery.flexslider-min.js" ></script>
 {% endblock %}

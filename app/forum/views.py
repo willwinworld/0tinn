@@ -4,20 +4,13 @@ from flask import Blueprint,render_template, flash, url_for, redirect, session, 
 from flask_login import current_user, login_required
 from .models import Topic, Reply
 from .forms import PostForm, ReplyForm
-from app.member.models import Member
 from app.message.models import Message
-from app.util.helper import get_online_user_nums, highest_online_number
 
 forum = Blueprint('forum', __name__)
 
 
-@forum.route('/', methods=['POST', 'GET'])
+@forum.route('/forum', methods=['POST', 'GET'])
 def index():
-    session['topic_num'] = Topic.total_topics()
-    session['member_num'] = Member.member_num()
-    session['reply_num'] = Reply.reply_num()
-    session['online_nums'] = get_online_user_nums()
-    session["highest_online_num"] = highest_online_number()
     hot_topics = Topic.get_hot()
     tab = "new"
     topics = Topic.get_topic(1, tab).items
@@ -26,11 +19,7 @@ def index():
         if t is not None:
             tab = t
         topics = Topic.get_topic(1, tab).items
-    if current_user.is_authenticated:
-        session['my_topic_num'] = Topic.get_user_topic_num(username=current_user.username)
-        session['msg_num'] = Message.get_user_unread_num(current_user.id)
-        session['following_nums'] = current_user.following_num
-    return render_template('index.html', topics=topics, hot_topics=hot_topics, tab=tab)
+    return render_template('forum/index.html', topics=topics, hot_topics=hot_topics, tab=tab)
 
 
 @forum.route('/topic/<int:id>', methods=['POST', 'GET'])
@@ -82,7 +71,6 @@ def post():
         topic =Topic(form.title.data,
                      form.content.data,
                      current_user.id,
-                     form.music_chain.data,
                      form.label.data)
         try:
             topic.save()

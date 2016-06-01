@@ -36,7 +36,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
                   <div class="collapse navbar-collapse" id="navbar-collapse-1">
               <ul class="nav navbar-nav col-md-2">
-                  <li><a href="/g">Game</a> <span class="sr-only"></span></li>
+                  <li><span class="sr-only"></span></li>
               </ul>
                   <form class="navbar-form navbar-left" role="search" action="/search" method="post">
                     <div class="form-group">
@@ -136,29 +136,6 @@
                      </script>
                  </div>
                 {% block side -%}{%- endblock %}
-                <div class="panel panel-default">
-        <div class="panel-heading">
-            <sapn class="text-muted">Community status</sapn>
-        </div>
-        <div class="panel-body">
-            <table class="table table-condensed" border="0">
-                <tbody>
-                    <tr>
-                        <td>Members</td>
-                        <td><strong>{{ session.get("member_num") }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Topics</td>
-                        <td><strong>{{ session.get("topic_num") }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Replies</td>
-                        <td><strong>{{ session.get("reply_num") }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
                 </div>
             </div>
         </div>
@@ -178,7 +155,6 @@
             </div>
         <div class="row">
             <div class="col-md-3 col-md-offset-2">Copyright &copy; 2016 0Tinn.</div>
-            <div class="col-md-5 text-muted"><i class="fa fa-music"></i> Music is the best medicine to heal me, no one can accompany me to pass through the sea of sorrow. <i class="fa fa-music"></i> </div>
         </div>
         </div>
     </div>

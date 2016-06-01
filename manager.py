@@ -6,9 +6,28 @@ from app.extensions import db
 app = create_app()
 manager = Manager(app)
 
-from app.message import Message, Pri_letter
-from app.forum import Topic, Reply
-from app.member import Member
+from app.member.forms import LoginForm
+from app.game.models import Popular_games, Gnews_Reply
+
+
+# Some Information
+@app.context_processor
+def utility_processor():
+
+    def info(s):
+        if s == "topgames":
+            return Popular_games.get_topgame()
+        elif s == "upcoming":
+            return Popular_games.get_upcoming()
+        elif s == "recent_reply":
+            return Gnews_Reply.get_index()
+    return dict(get_value=info)
+
+
+@app.context_processor
+def forms():
+    login_form = LoginForm()
+    return dict(login_form=login_form)
 
 
 @manager.command

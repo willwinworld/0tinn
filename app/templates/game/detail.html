@@ -1,32 +1,207 @@
-{% extends "base.html" %}
+{% extends "game/index.html" %}
 
-{% block content %}
-    <div class="container-fluid">
-        <div class="sep20"></div>
+{% block main %}
+    <section class="main-wrapper single-category">
+      <div class="container">
         <div class="row">
-            <div class="col-md-7 col-md-offset-2">
-                <div class="panel panel-default box">
-                <div class="page-header">
-                    <h4><strong>{{ news.title }}</strong></h4>
-                </div>
-                {{ moment(news.date_created, local=True).fromNow() }}
-                <hr>
-                    <p class="lead">{{ news.sentence }}</p>
-                    <img src="{{ news.pic }}" class="img-thumbnail img-responsive">
-                    <hr>
-                    <div class="story-text">
-                    {{ news.content | safe }}
-                        </div>
-                    <hr>
+          <div class="col-sm-9">
+            <div class="row">
+               <div class="col-sm-12">
+                 <img src="{{ news.pic }}" class="img-leading img-thumbnail" alt="img">
+                 <h2 class="main-entry-title">{{ news.title }}</h2>
+                 <div class="entry-blog-meta">
+                  <div class="entry-blog-meta-list">
+                    <div class="author-avatar-text">
+                      <p class="author">{{ news.sentence }}</p>
+                    </div>
+                  </div> <!-- //entry-blog-meta-list -->
 
-            </div>
-                <div class="sep20"></div>
-                <div class="panel panel-default">
-                <form class="form-custom form-horizontal">
-                        {{ form.hidden_tag() }}
-                        {{ form.content(class="form-control",style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%;",maxlength='10000') }}
-                        <button class="btn  btn-default" onclick="post_reply()">Comment</button>
-                    </form>
+                  <div class="entry-blog-meta-list">
+                    <div class="share-count">
+                      <span class="number">{{ news.views }}</span><span>Views</span>
+                    </div>
+                  </div> <!-- //entry-blog-meta-list -->
+                </div> <!-- //entry-blog-meta -->
+
+                <div class="entry-summary">
+                    {{ news.content | safe }}
+                </div>   <!-- //entry-summary -->
+
+                <div class="post-meta-info">
+                  <div class="post-meta-info-list tags">
+                    <i class="fa fa-tags"></i>
+                    <div class="post-meta-info-list-in tags-in">
+                      <p>Tags</p>
+                      <a href="#">News</a>
+                    </div>
+                  </div>
+                  <div class="post-meta-info-list comments">
+                    <i class="fa fa-comments-o"></i>
+                    <div class="post-meta-info-list-in comments-in">
+                      <p>Comments</p>
+                      <a href="#"><span class="leave-reply">{{ replies | length }}</span></a>
+                    </div>
+                  </div>
+                  <div class="post-meta-info-list category">
+                    <i class="fa fa-folder-open-o"></i>
+                    <div class="post-meta-info-list-in category-in">
+                      <p>Category</p>
+                      <a href="/g" rel="category tag">News</a>
+                    </div>
+                  </div>
+                  <div class="post-meta-info-list date">
+                    <i class="fa fa-calendar-o"></i>
+                    <div class="post-meta-info-list-in date-in">
+                      <p>Date</p>
+                      <time class="entry-date">{{ moment(news.date_created).format("dddd, MMMM Do YYYY") }}</time>
+                    </div>
+                  </div>
+                </div> <!-- //post-meta-info -->
+               </div> <!-- //col-sm-12 -->
+
+             </div>
+
+{#            <div class="row">#}
+{#              <div class="col-sm-12">#}
+{#                 <div class="section-title">#}
+{#                 <h3> <span class="cat-icon"><i class="fa fa-book"></i></span>More Related Stories</h3>#}
+{#                 </div>#}
+{#               </div> <!-- //section-title -->#}
+{##}
+{#              <div class="simple-article-overlay mtt30">#}
+{#               <div class="col-sm-4">#}
+{#                 <article class="gradient-color04">#}
+{#                   <div class="article-inner">#}
+{#                     <div class="overlay"></div>#}
+{#                     <div class="img-wrapper"><img class="img-100p latest-post-image" src="img/article-img/thumbnail01.jpg" alt="img"></div>#}
+{#                     <div class="post-share-social">#}
+{#                       <a href="#" class="fa fa-facebook"></a>#}
+{#                       <a href="#" class="fa fa-twitter"></a>#}
+{#                       <a href="#" class="fa fa-google-plus"></a>#}
+{#                       <a href="#" class="fa fa-pinterest"></a>#}
+{#                       <a href="#" class="fa fa-linkedin"></a>#}
+{#                       <div class="share-icon"><i class="fa fa-share-alt"></i></div>#}
+{#                     </div> <!-- //post-share-social -->#}
+{#                     <div class="article-info">#}
+{#                       <h4 class="entry-title">#}
+{#                         <a href="single-article.html">Aliquam sed felis ligula. Duis non nulla magna</a>#}
+{#                       </h4>#}
+{#                     </div>#}
+{#                   </div>#}
+{#                 </article>#}
+{#               </div> <!-- //col-sm-4 -->#}
+{#               <div class="col-sm-4">#}
+{#                 <article class="gradient-color04">#}
+{#                   <div class="article-inner">#}
+{#                     <div class="overlay"></div>#}
+{#                     <div class="img-wrapper"><img class="img-100p latest-post-image" src="img/article-img/thumbnail02.jpg" alt="img"></div>#}
+{#                     <div class="post-share-social">#}
+{#                       <a href="#" class="fa fa-facebook"></a>#}
+{#                       <a href="#" class="fa fa-twitter"></a>#}
+{#                       <a href="#" class="fa fa-google-plus"></a>#}
+{#                       <a href="#" class="fa fa-pinterest"></a>#}
+{#                       <a href="#" class="fa fa-linkedin"></a>#}
+{#                       <div class="share-icon"><i class="fa fa-share-alt"></i></div>#}
+{#                     </div> <!-- //post-share-social -->#}
+{#                     <div class="article-info">#}
+{#                       <h4 class="entry-title">#}
+{#                         <a href="single-article.html">Aliquam sed felis ligula. Duis non nulla magna</a>#}
+{#                       </h4>#}
+{#                     </div>#}
+{#                   </div>#}
+{#                 </article>#}
+{#               </div> <!-- //col-sm-4 -->#}
+{#               <div class="col-sm-4">#}
+{#                 <article class="gradient-color04">#}
+{#                   <div class="article-inner">#}
+{#                     <div class="overlay"></div>#}
+{#                     <div class="img-wrapper"><img class="img-100p latest-post-image" src="img/article-img/thumbnail03.jpg" alt="img"></div>#}
+{#                     <div class="post-share-social">#}
+{#                       <a href="#" class="fa fa-facebook"></a>#}
+{#                       <a href="#" class="fa fa-twitter"></a>#}
+{#                       <a href="#" class="fa fa-google-plus"></a>#}
+{#                       <a href="#" class="fa fa-pinterest"></a>#}
+{#                       <a href="#" class="fa fa-linkedin"></a>#}
+{#                       <div class="share-icon"><i class="fa fa-share-alt"></i></div>#}
+{#                     </div> <!-- //post-share-social -->#}
+{#                     <div class="article-info">#}
+{#                       <h4 class="entry-title">#}
+{#                         <a href="single-article.html">Aliquam sed felis ligula. Duis non nulla magna</a>#}
+{#                       </h4>#}
+{#                     </div>#}
+{#                   </div>#}
+{#                 </article>#}
+{#               </div> <!-- //col-sm-4 -->#}
+{#               <div class="col-sm-4">#}
+{#                 <article class="gradient-color04">#}
+{#                   <div class="article-inner">#}
+{#                     <div class="overlay"></div>#}
+{#                     <div class="img-wrapper"><img class="img-100p latest-post-image" src="img/article-img/thumbnail04.jpg" alt="img"></div>#}
+{#                     <div class="post-share-social">#}
+{#                       <a href="#" class="fa fa-facebook"></a>#}
+{#                       <a href="#" class="fa fa-twitter"></a>#}
+{#                       <a href="#" class="fa fa-google-plus"></a>#}
+{#                       <a href="#" class="fa fa-pinterest"></a>#}
+{#                       <a href="#" class="fa fa-linkedin"></a>#}
+{#                       <div class="share-icon"><i class="fa fa-share-alt"></i></div>#}
+{#                     </div> <!-- //post-share-social -->#}
+{#                     <div class="article-info">#}
+{#                       <h4 class="entry-title">#}
+{#                         <a href="single-article.html">Aliquam sed felis ligula. Duis non nulla magna</a>#}
+{#                       </h4>#}
+{#                     </div>#}
+{#                   </div>#}
+{#                 </article>#}
+{#               </div> <!-- //col-sm-4 -->#}
+{#               <div class="col-sm-4">#}
+{#                 <article class="gradient-color04">#}
+{#                   <div class="article-inner">#}
+{#                     <div class="overlay"></div>#}
+{#                     <div class="img-wrapper"><img class="img-100p latest-post-image" src="img/article-img/thumbnail05.jpg" alt="img"></div>#}
+{#                     <div class="post-share-social">#}
+{#                       <a href="#" class="fa fa-facebook"></a>#}
+{#                       <a href="#" class="fa fa-twitter"></a>#}
+{#                       <a href="#" class="fa fa-google-plus"></a>#}
+{#                       <a href="#" class="fa fa-pinterest"></a>#}
+{#                       <a href="#" class="fa fa-linkedin"></a>#}
+{#                       <div class="share-icon"><i class="fa fa-share-alt"></i></div>#}
+{#                     </div> <!-- //post-share-social -->#}
+{#                     <div class="article-info">#}
+{#                       <h4 class="entry-title">#}
+{#                         <a href="single-article.html">Aliquam sed felis ligula. Duis non nulla magna</a>#}
+{#                       </h4>#}
+{#                     </div>#}
+{#                   </div>#}
+{#                 </article>#}
+{#               </div> <!-- //col-sm-4 -->#}
+{#               <div class="col-sm-4">#}
+{#                 <article class="gradient-color04">#}
+{#                   <div class="article-inner">#}
+{#                     <div class="overlay"></div>#}
+{#                     <div class="img-wrapper"><img class="img-100p latest-post-image" src="img/article-img/thumbnail06.jpg" alt="img"></div>#}
+{#                     <div class="post-share-social">#}
+{#                       <a href="#" class="fa fa-facebook"></a>#}
+{#                       <a href="#" class="fa fa-twitter"></a>#}
+{#                       <a href="#" class="fa fa-google-plus"></a>#}
+{#                       <a href="#" class="fa fa-pinterest"></a>#}
+{#                       <a href="#" class="fa fa-linkedin"></a>#}
+{#                       <div class="share-icon"><i class="fa fa-share-alt"></i></div>#}
+{#                     </div> <!-- //post-share-social -->#}
+{#                     <div class="article-info">#}
+{#                       <h4 class="entry-title">#}
+{#                         <a href="single-article.html">Aliquam sed felis ligula. Duis non nulla magna</a>#}
+{#                       </h4>#}
+{#                     </div>#}
+{#                   </div>#}
+{#                 </article>#}
+{#               </div> <!-- //col-sm-4 -->#}
+{#             </div>#}
+{#           </div> <!-- //row -->#}
+
+           <div class="row">
+             <!-- previous comments -->
+             <div class="col-sm-12">
+              <div class="comments-content mtt60">
                     <ul class="list-group reply-list">
                         <li class="list-group-item reply-header small">
                             <strong>{{ replies | length }} Reply<strong></strong>
@@ -52,75 +227,27 @@
                             </li>
                             {% endfor %}
                     </ul>
-                <div class="sep20">
-                </div>
-                </div>
-    </div>
-            <div class="col-md-3">
-            
-                {% if current_user.is_authenticated %}
-                 <div class="panel panel-default">
-                  <div class="panel-body">
-                    <div class="media">
-                      <div class="media-left">
-                        <a href="/member/{{ current_user.username }}">
-                            <img class="media-object" src="{{ current_user.avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
-                        </a>
-                      </div>
-                      <div class="media-body">
-                        <h5 class="media-heading">{{ current_user.username }}</h5>
-                          <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                              <tbody>
-                                <tr>
-                                    <td width="33%" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>{{ session.get('my_topic_num') }}</h5><span class="text-muted">My &nbsp;&nbsp;&nbsp;topics</span></a></td>
-                                    <td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>0</h5><span class="text-muted">Topic collections</span></a></td>
-                                    <td width="33%" align="center"><a style="display: block;" href="/member/{{ current_user.username }}"><h5>{{ session.get("following_nums") }}</h5><span class="text-muted">Special attention</span></a></td>
-                                </tr>
-                            </tbody>
-                          </table>
-                      </div>
-                    </div>
-                          <hr>
-                          <h5><a href="/post"><i class="fa fa-pencil" aria-hidden="true">New topic</i></a></h5>
-                          <hr>
-                          <a href="/member/{{ current_user.username }}"> {{ session.get("msg_num") }} tips unread</a>
-                      {% if current_user.is_check_in %}
-                          <a href="/balance"><span class="pull-right"><strong>{{ current_user.wealth }}</strong> <i class="fa fa-music" aria-hidden="true"></i></span></a>
-                      {% else %}
-                          <button class="btn-default btn pull-right" onclick="check_in()">Check in</button>
-                      {% endif %}
-                  </div>
-                </div>
-                 {% else %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <span class="text-muted"> Registered is more exciting </span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="text-center">
-                                <a href="/signup"><button class="btn btn-default">Join us</button> </a>
-                                <p></p>
-                                <p>or you want to <a href="/login">sign in</a> </p>
-                            </div>
-                        </div>
-                    </div>
-                 {% endif %}
-        </div>
-        <div class="col-md-3">
-            <div style="height: 50px">
-                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                        <!-- 0tinn_second -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-9642706590148415"
-                             data-ad-slot="2464502080"
-                             data-ad-format="auto"></ins>
-                        <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
-                </div>
-        </div>
-    </div>
+              </div>
+            </div> <!-- //previous comments -->
+           <div class="comments-form col-sm-12">
+              <div class="section-title">
+               <h3> <span class="cat-icon"><i class="fa fa-commenting"></i></span>Leave a comment</h3>
+             </div>
+             <div class="contact-form leave-message">
+               <form id="main-contact-form" >
+                   {{ form.hidden_tag() }}
+                 <div class="form-group input-textarea">
+                   {{ form.content(class="form-control",style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%;",maxlength='10000') }}
+                 </div>
+                 <button type="submit" class="btn btn-success" onclick="post_reply()">Send Message</button>
+               </form>
+             </div>
+            </div>
+           </div> <!-- //row -->
+          </div> <!-- //col-sm-9 -->
+        </div> <!-- //row -->
+      </div> <!-- //container -->
+    </section>
 {% endblock %}
 
 {% block scripts %}
@@ -139,13 +266,13 @@
             url: "/g/handle_ajax",
             type: "GET",
             data: {"tab":"gnews", "action":"post_reply", "id":"{{ news.id }}", "content": $("#content").val()},
-            success: function(msg){
-                alert(msg["info"])
+            success: function(){
+                location.reload()
             }
         })
     }
     {% if current_user.is_authenticated %}
-        var $button = $("<div id='reply-button' class='btn btn-xs'><i class='fa fa-reply' aria-hidden='true'></i></div>").click(function(){
+        var $button = $("<div id='reply-button' class='btn btn-xs'><i class='fa fa-reply btn-success' aria-hidden='true'></i></div>").click(function(){
             var m = $(this).prev().find("#username").text();
             $("#content").focus().text("@" + m + " ");
         });

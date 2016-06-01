@@ -31,18 +31,6 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    {{ form.music_chain.label(class='col-md-2 control-label') }}
-                    <div class="col-md-8">
-                        {{ form.music_chain(class='form-control', placeholder='Music outchain') }}
-                    </div>
-                    <div class="col-md-2"> <a href="/how"><i class="fa fa-question fa-2x" aria-hidden="true"></i> <span class="small"> Unclear？</span></a></div>
-                     {% if form.music_chain.errors %}
-                        {% for error in form.music_chain.errors %}
-                            <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                <div class="form-group">
                     {{ form.content.label(class='col-md-2 control-label') }}
                     <div class="col-md-10">
                         {{ form.content(class='form-control', placeholder='Content',style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%",rows='4',maxlength='10000') }}

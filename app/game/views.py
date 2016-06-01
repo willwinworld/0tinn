@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from flask_login import current_user, login_required
 from app.util.decorate import admin_must
+from app.member.forms import LoginForm
 from .models import Game_News, Gnews_Reply
 from .forms import GnewsReplyForm, Game_news
 
@@ -16,15 +17,14 @@ def index():
             page = 1
         elif int(page) < 1:
             page = 1
-        hot = Game_News.get_hot()
         news = Game_News.get(int(page))
-
-    return render_template("game/index.html", news=news, hot=hot)
+    return render_template("game/index.html", news=news)
 
 
 @gnews.route('/g/<string:title>', methods=['GET', 'POST'])
 def detail(title):
     news = Game_News.query.filter_by(title=title).first_or_404()
+    news.add_views()
     replies = Gnews_Reply.get(news.id)
     form = GnewsReplyForm()
     return render_template("game/detail.html", news=news, replies=replies, form=form)

@@ -6,6 +6,7 @@ from .member.views import member
 from .message.views import message
 from .admin.views import adm
 from .game.views import gnews
+from .index.views import index
 from .member.models import Member
 from flaskext.markdown import Markdown
 
@@ -43,3 +44,4 @@ def register_bprint(app):
     app.register_blueprint(message)
     app.register_blueprint(adm)
     app.register_blueprint(gnews)
+    app.register_blueprint(index)
