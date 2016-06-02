@@ -40,10 +40,9 @@ def deal_cells():
             pic = yield from upload_pic(p)
             if not pic:
                 pic = p
-            print(t,st,pic,ct)
             over = yield from gnews_save(t, st, ct, pic)
             if not over:
-                break
+               continue
 
 
 @asyncio.coroutine
