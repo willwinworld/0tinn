@@ -23,7 +23,7 @@ def upload_pic(url):
         if 'info' in res:
             return False
         else:
-            return res['s_url']
+            return res['link_url']
 
 
 @asyncio.coroutine

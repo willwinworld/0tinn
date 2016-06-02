@@ -6,16 +6,10 @@ from manager import app
 from app.game.models import Popular_games
 
 url = "http://www.ign.com/?setccpref=US"
-headers = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-"Accept-Encoding":"gzip, deflate, sdch",
-"Accept-Language":"zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4",
-"Connection":"keep-alive",
-          "Host":"www.ign.com","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
-          }
 time_out = 20
 
 print("Try to connect IGN")
-resp = requests.get(url=url, headers=headers, timeout=time_out)
+resp = requests.get(url=url, timeout=time_out)
 print("Connected")
 soup = BeautifulSoup(resp.content, "html.parser")
 topgames = soup.find_all("div", class_="topgames-module")
