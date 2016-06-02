@@ -7,7 +7,6 @@ from app.game.models import Game_News
 from app.util.helper import up_avatar
 
 
-wccftech_url = 'http://wccftech.com/topic/games/page/1'
 wccftech_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 "Accept-Encoding":"gzip, deflate, sdch",
 "Accept-Language":"zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4",
@@ -28,34 +27,35 @@ def upload_pic(url):
 
 @asyncio.coroutine
 def deal_cells():
-    print("Try connect Wccftech")
-    wccftech_url = 'http://wccftech.com/topic/games/page/1'
-    resp = requests.get(wccftech_url, headers=wccftech_header, timeout=time_out)
-    print("Complete")
-    soup = BeautifulSoup(resp.content, "html.parser")
-    cells = soup.find_all("div", class_="post")
-    for c in cells:
-        print("Action")
-        s = BeautifulSoup(str(c), "html.parser")
-        p = s.find("img")["src"]
-        t = s.find("h2").text
-        t = t.replace("/", "|")
-        t = t.replace("&", "and")
-        t = t.replace("?", " ")
-        st = list(s.strings)[-1].strip()
-        n_url = s.find("a")['href']
-        ct, p = yield from get_content(n_url)
-        pic = yield from upload_pic(p)
-        if not pic:
-            pic = p
-        over = yield from gnews_save(t, st, ct, pic)
-        if not over:
-            break
-
+       wccftech_url = 'http://wccftech.com/topic/games/page/1'
+       print("正在链接:" + wccftech_url)
+       resp = requests.get(wccftech_url, headers=wccftech_header, timeout=time_out)
+       print("链接完成")
+       soup = BeautifulSoup(resp.content, "html.parser")
+       cells = soup.find_all("div", class_="post")
+       for c in cells:
+           print("开始获取信息")
+           s = BeautifulSoup(str(c), "html.parser")
+           p = s.find("img")["src"]
+           t = s.find("h2").text
+           t = t.replace("/", "|")
+           t = t.replace("&", "and")
+           t = t.replace("?", " ")
+           st = list(s.strings)[-1].strip()
+           n_url = s.find("a")['href']
+           ct, p = yield from get_content(n_url)
+           pic = yield from upload_pic(p)
+           print('获取信息完成，正在尝试上传图片')
+           if not pic:
+               pic = p
+               print('上传失败')
+           over = yield from gnews_save(t, st, ct, pic)
+           if not over:
+               continue
 
 @asyncio.coroutine
 def get_content(n):
-    print("Let us get content")
+    print("正在获取内容")
     resp_n = requests.get(n, headers=wccftech_header, timeout=time_out)
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("div", class_="body")
@@ -68,10 +68,11 @@ def get_content(n):
 @asyncio.coroutine
 def gnews_save(t, s, ct, p):
     gnews = Game_News(t, s, ct, p)
-    print("Yeah save!!!!")
+    print("尝试存储")
     with app.app_context():
         try:
             gnews.save()
+            print("储存成功")
             return True
         except:
             return False
