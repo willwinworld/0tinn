@@ -20,8 +20,7 @@ def upload_pic(url):
 
 @asyncio.coroutine
 def deal_cells():
-    for i in [11,10,9,8,7,6,5,4,3,2,1]:
-        dualshockers_url = 'http://www.dualshockers.com/page/' + str(i) + '/'
+        dualshockers_url = 'http://www.dualshockers.com/page/1/'
         print("Try connect:" + dualshockers_url)
         resp = requests.get(dualshockers_url,  timeout=time_out)
         print("Complete")
