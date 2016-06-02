@@ -2,7 +2,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from flask_login import current_user, login_required
 from app.util.decorate import admin_must
-from app.member.forms import LoginForm
 from .models import Game_News, Gnews_Reply
 from .forms import GnewsReplyForm, Game_news
 
