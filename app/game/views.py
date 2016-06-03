@@ -16,7 +16,7 @@ def index():
             page = 1
         elif int(page) < 1:
             page = 1
-        elif int(page) > 30:
+        elif int(page) > 100:
             return 404
         news = Game_News.get(int(page))
     return render_template("game/index.html", news=news)
