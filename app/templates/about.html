@@ -1,23 +1,30 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
+{% block start %}
+{% endblock %}
 {% block main %}
-    <div class="sep20"></div>
-    <div class="sep20"></div>
-    <div class="panel panel-default about-text">
-        <div class="page-header">
-            <p></p>
-            <h4>About 0Tinn</h4>
-        </div>
-        <p>0Tinn just 0tinn </p>
-        <p>I hope that we can share a lot of their favorite music, their own views. And, most importantly, in all this process, maintaining a friendly to others.
+    <section class="main-wrapper history-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="history-info">
+              <p class="title">About 0Tinn</p>
+              <h2 class="subtitle">
+               0Tinn just 0tinn
+              </h2>
+              <p>I hope that we can share a lot of their favorite music, their own views. And, most importantly, in all this process, maintaining a friendly to others.
         </p>
         <p>In order to maintain a good atmosphere here, 0Tinn has its own clear rules: </p>
         <ul>
             <li>Here gratitude and respect for things of beauty </li>
-            <li>Here prohibited to publish personal attacks, hatred, violence, insulting words to expose the privacy of others, "human flesh stick"</li>>
+            <li>Here prohibited to publish personal attacks, hatred, violence, insulting words to expose the privacy of others, "human flesh stick"</li>
         </ul>
         <p>The community is guarded by everyone, if found, any site does not comply with the rules, please report to report mode please see FAQ</p>
         <br>
         <p class="small text-muted">Last Revised 2016-5-27</p>
     </div>
+          </div> <!-- //row -->
+        </div> <!-- //our-history -->
+      </div> <!-- //container -->
+    </section>
 {% endblock %}

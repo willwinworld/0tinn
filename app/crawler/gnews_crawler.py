@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.util.helper import up_avatar
 
-#pcgamer_url = 'http://www.pcgamer.com/news/'
 pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 "Accept-Encoding":"gzip, deflate, sdch",
 "Accept-Language":"zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4",
@@ -14,16 +13,10 @@ pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9
           "Host":"www.pcgamer.com","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
           }
 time_out = 20
-print("Try connect pcgamer.....")
-#resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
-#print("Complete")
-#soup = BeautifulSoup(resp.content, "html.parser")
 
 
 def n_filter(tag):
     return tag.has_attr("data-page") and "listingResult" in tag["class"]
-
-#cells = soup.find_all(n_filter)
 
 
 @asyncio.coroutine
@@ -38,16 +31,12 @@ def upload_pic(url):
 @asyncio.coroutine
 def deal_cells():
     pcgamer_url = 'http://www.pcgamer.com/news/page/1/'
-    print("正在链接:" + pcgamer_url)
     resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
-    print("链接完成")
     soup = BeautifulSoup(resp.content, "html.parser")
     cells = soup.find_all(n_filter)
     for c in cells:
-        print("开始获取信息")
         s = BeautifulSoup(str(c), "html.parser")
         p = s.find("figure")["data-original"]
-        print("正在尝试上传图片")
         pic = yield from upload_pic(p)
         if not pic:
             pic = p
@@ -58,7 +47,6 @@ def deal_cells():
         st = s.find("p", class_="synopsis").text
         n_url = s.find("a")['href']
         ct = yield from get_content(n_url)
-        print('获取信息完成')
         over = yield from gnews_save(t, st, ct, pic)
         if not over:
             continue
@@ -66,7 +54,6 @@ def deal_cells():
 
 @asyncio.coroutine
 def get_content(n):
-    print("正在获取内容")
     resp_n = requests.get(n, headers=pcgame_header, timeout=time_out)
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("textplugin")
@@ -77,11 +64,9 @@ def get_content(n):
 @asyncio.coroutine
 def gnews_save(t, s, ct, p):
     gnews = Game_News(t, s, ct, p)
-    print("尝试存储")
     with app.app_context():
         try:
             gnews.save()
-            print("储存成功")
             return True
         except:
             return False

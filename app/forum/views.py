@@ -55,7 +55,7 @@ def about():
 
 @forum.route('/faq')
 def faq():
-    return render_template('faq.html')
+    return redirect(url_for(".index"))
 
 
 @forum.route('/advertise')
@@ -157,4 +157,4 @@ def search():
 @forum.route('/how')
 def how():
 
-    return render_template("how.html")
+    return redirect(url_for(".index"))
