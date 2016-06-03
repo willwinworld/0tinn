@@ -562,8 +562,8 @@
 							<div class="latest-comment">
 								<p>"{{ i.content }}"</p>
 								<div class="media">
-									<div class="latest-comments-image media-left">
-										<img src="{{ i.get_user().avatar }}" alt="comment">
+									<div class="media-left latest-comments-image">
+										<img src="{{ i.get_user().avatar }}" alt="comment" style="height:30px"
 									</div>
 									<div class="latest-comment-wrap media-body">
 										<span class="latest-comments-user">{{ i.username }}</span><span class="latest-comments-date">{{ moment(i.date_created).format("MMMM Do YYYY") }}</span>
