@@ -1,10 +1,12 @@
 # -*- coding:utf-8 -*-
+from threading import Timer
 from .wccftech_spider import run_wccftech
 from .gnews_crawler import run_gnews
 from .dualshockers import run_dualshockers
 from multiprocessing import Process
 
-p1 = Process(target=run_gnews)
+def run():
+    p1 = Process(target=run_gnews)
 p2 = Process(target=run_wccftech)
 p4 = Process(target=run_dualshockers)
 p1.start()
