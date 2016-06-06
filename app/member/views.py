@@ -77,7 +77,7 @@ def login():
 @login_required
 def signout():
     logout_user()
-    return ""
+    return redirect("/")
 
 
 @member.route("/forget", methods=["GET", "POST"])
