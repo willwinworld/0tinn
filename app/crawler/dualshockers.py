@@ -53,21 +53,22 @@ def get_content(n):
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("div", class_="post-alt")
     pic = text.find("img")["src"]
-    ct = text.find("div", class_="entry")
+    ct = str(text.find("div", class_="entry"))
     return ct, pic
 
 
 @asyncio.coroutine
 def gnews_save(t, s, ct, p):
+    print(type(t), type(s), type(ct), type(p))
     gnews = Game_News(t, s, ct, p)
     print("尝试存储")
     with app.app_context():
-       # try:
+        try:
             gnews.save()
             print("储存成功")
-        #    return True
-        #except:
-        #    return False
+            return True
+        except:
+            return False
 
 
 def run_dualshockers():
