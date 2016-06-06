@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import time
+from datetime import datetime
 from .wccftech_spider import run_wccftech
 from .gnews_crawler import run_gnews
 from .dualshockers import run_dualshockers
@@ -17,5 +18,6 @@ def run():
     p4.join()
 
 while True:
+    print("Time:" + datetime.now().strftime("%d %H:%M"))
     run()
     time.sleep(10800)

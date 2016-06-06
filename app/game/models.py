@@ -40,7 +40,7 @@ class Game_News(db.Model):
 
     @classmethod
     def get(cls, page):
-        return cls.query.order_by(cls.date_created.desc()).paginate(page, 30, False)
+        return cls.query.order_by(cls.id.desc()).paginate(page, 30, False)
 
     @classmethod
     def get_index(cls):

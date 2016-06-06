@@ -20,7 +20,7 @@ def upload_pic(url):
 
 @asyncio.coroutine
 def deal_cells():
-    dualshockers_url = 'http://www.dualshockers.com/page/1/'
+    dualshockers_url = 'http://www.dualshockers.com'
     print("正在链接:" + dualshockers_url)
     resp = requests.get(dualshockers_url,  timeout=time_out)
     print("链接完成")
@@ -43,7 +43,7 @@ def deal_cells():
             print('上传失败')
         over = yield from gnews_save(t, st, ct, pic)
         if not over:
-           break
+          continue
 
 
 @asyncio.coroutine
@@ -62,12 +62,12 @@ def gnews_save(t, s, ct, p):
     gnews = Game_News(t, s, ct, p)
     print("尝试存储")
     with app.app_context():
-        try:
+       # try:
             gnews.save()
             print("储存成功")
-            return True
-        except:
-            return False
+        #    return True
+        #except:
+        #    return False
 
 
 def run_dualshockers():
