@@ -4,7 +4,7 @@ from flask_login import current_user
 from app.forum.models import Topic
 from app.message.models import Message
 from app.game.models import Game_News
-from app.util.helper import get_sentence, get_online_user_nums, highest_online_number
+from app.util.helper import get_online_user_nums, highest_online_number
 index = Blueprint("index", __name__)
 
 
@@ -13,8 +13,6 @@ def main():
     hot_news = Game_News.get_hot()
     news_index = Game_News.get_index()
     news = Game_News.get(1).items
-    if session.get("sentence") is None:
-        session['sentence'] = get_sentence()
     if current_user.is_authenticated:
         session['my_topic_num'] = Topic.get_user_topic_num(username=current_user.username)
         session['msg_num'] = Message.get_user_unread_num(current_user.id)

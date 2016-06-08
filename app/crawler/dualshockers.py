@@ -43,7 +43,7 @@ def deal_cells():
             print('上传失败')
         over = yield from gnews_save(t, st, ct, pic)
         if not over:
-          continue
+         break
 
 
 @asyncio.coroutine
