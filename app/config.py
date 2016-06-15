@@ -28,7 +28,6 @@ class config():
     RECAPTCHA_PRIVATE_KEY = "6LcAViETAAAAAAxdSV7x0qe7ylvPNgp_lgDS1QEX"
 
     #Celery
-    CELERY_TIMEZONE = 'Asia/Shanghai'
     BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_IMPORTS = ('app.crawler.dualshockers', 'app.crawler.gnews_crawler', 'app.crawler.wccftech_spider')
