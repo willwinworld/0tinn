@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 import requests
-import asyncio
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.util.helper import up_avatar
+from app.extensions import celery
 
 
 wccftech_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -16,7 +16,6 @@ wccftech_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0
 time_out = 20
 
 
-@asyncio.coroutine
 def upload_pic(url):
         res = up_avatar(url)
         if 'info' in res:
@@ -25,8 +24,29 @@ def upload_pic(url):
             return res['linkurl']
 
 
-@asyncio.coroutine
-def deal_cells():
+def get_content(n):
+    print("正在获取内容")
+    resp_n = requests.get(n, headers=wccftech_header, timeout=time_out)
+    soup_n = BeautifulSoup(resp_n.content, "html.parser")
+    text = soup_n.find("div", class_="body")
+    source = text.find_all("p")[2:]
+    pic = text.find("img")["src"]
+    ct = "".join(str(v) for v in source)
+    return ct, pic
+
+
+def gnews_save(t, s, ct, p):
+    gnews = Game_News(t, s, ct, p)
+    print("尝试存储")
+    with app.app_context():
+        try:
+            gnews.save()
+            print("储存成功")
+            return True
+        except:
+            return False
+
+def run():
        wccftech_url = 'http://wccftech.com/topic/games/page/1'
        print("正在链接:" + wccftech_url)
        resp = requests.get(wccftech_url, headers=wccftech_header, timeout=time_out)
@@ -43,43 +63,12 @@ def deal_cells():
            t = t.replace("?", " ")
            st = list(s.strings)[-1].strip()
            n_url = s.find("a")['href']
-           ct, p = yield from get_content(n_url)
-           pic = yield from upload_pic(p)
+           ct, p = get_content(n_url)
+           pic = upload_pic(p)
            print('获取信息完成，正在尝试上传图片')
            if not pic:
                pic = p
                print('上传失败')
-           over = yield from gnews_save(t, st, ct, pic)
+           over = gnews_save(t, st, ct, pic)
            if not over:
              break
-
-
-@asyncio.coroutine
-def get_content(n):
-    print("正在获取内容")
-    resp_n = requests.get(n, headers=wccftech_header, timeout=time_out)
-    soup_n = BeautifulSoup(resp_n.content, "html.parser")
-    text = soup_n.find("div", class_="body")
-    source = text.find_all("p")[2:]
-    pic = text.find("img")["src"]
-    ct = "".join(str(v) for v in source)
-    return ct, pic
-
-
-@asyncio.coroutine
-def gnews_save(t, s, ct, p):
-    gnews = Game_News(t, s, ct, p)
-    print("尝试存储")
-    with app.app_context():
-        try:
-            gnews.save()
-            print("储存成功")
-            return True
-        except:
-            return False
-
-
-def run_wccftech():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(deal_cells())
-    loop.close()

@@ -1,11 +1,10 @@
 # -*- coding:utf-8 -*-
 import requests
-import asyncio
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.util.helper import up_avatar
-
+from app.extensions import celery
 
 pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 "Accept-Encoding":"gzip, deflate, sdch",
@@ -21,7 +20,6 @@ def n_filter(tag):
     return tag.has_attr("data-page") and "listingResult" in tag["class"]
 
 
-@asyncio.coroutine
 def upload_pic(url):
         res = up_avatar(url)
         if 'info' in res:
@@ -30,36 +28,6 @@ def upload_pic(url):
             return res['linkurl']
 
 
-@asyncio.coroutine
-def deal_cells():
-    pcgamer_url = 'http://www.pcgamer.com/news/page/1/'
-    print("正在链接:" + pcgamer_url)
-    resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
-    print("链接完成")
-    soup = BeautifulSoup(resp.content, "html.parser")
-    cells = soup.find_all(n_filter)
-    for c in cells:
-        print("开始获取信息")
-        s = BeautifulSoup(str(c), "html.parser")
-        p = s.find("figure")["data-original"]
-        print("正在尝试上传图片")
-        pic = yield from upload_pic(p)
-        if not pic:
-            pic = p
-        t = s.find("h3", class_="article-name").text
-        t = t.replace("/", "|")
-        t = t.replace("&", "and")
-        t = t.replace("?", " ")
-        st = s.find("p", class_="synopsis").text
-        n_url = s.find("a")['href']
-        ct = yield from get_content(n_url)
-        print('获取信息完成')
-        over = yield from gnews_save(t, st, ct, pic)
-        if not over:
-         break
-
-
-@asyncio.coroutine
 def get_content(n):
     print("正在获取内容")
     resp_n = requests.get(n, headers=pcgame_header, timeout=time_out)
@@ -69,7 +37,6 @@ def get_content(n):
     return str(text)
 
 
-@asyncio.coroutine
 def gnews_save(t, s, ct, p):
     gnews = Game_News(t, s, ct, p)
     print("尝试存储")
@@ -81,7 +48,29 @@ def gnews_save(t, s, ct, p):
         except:
             return False
 
-def run_gnews():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(deal_cells())
-    loop.close()
+def run():
+    pcgamer_url = 'http://www.pcgamer.com/news/page/1/'
+    print("正在链接:" + pcgamer_url)
+    resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
+    print("链接完成")
+    soup = BeautifulSoup(resp.content, "html.parser")
+    cells = soup.find_all(n_filter)
+    for c in cells:
+        print("开始获取信息")
+        s = BeautifulSoup(str(c), "html.parser")
+        p = s.find("figure")["data-original"]
+        print("正在尝试上传图片")
+        pic = upload_pic(p)
+        if not pic:
+            pic = p
+        t = s.find("h3", class_="article-name").text
+        t = t.replace("/", "|")
+        t = t.replace("&", "and")
+        t = t.replace("?", " ")
+        st = s.find("p", class_="synopsis").text
+        n_url = s.find("a")['href']
+        ct = get_content(n_url)
+        print('获取信息完成')
+        over = gnews_save(t, st, ct, pic)
+        if not over:
+         break

@@ -1,19 +1,19 @@
 # -*- coding:utf-8 -*-
-from flask import render_template, copy_current_request_context
+from flask import render_template
 from flask_mail import Message
-from app.extensions import mail
-from threading import Thread
+from app.extensions import mail, celery
 
 
 def send_email(subject, recipients, text_body, html_body, sender=None):
     msg = Message(subject, recipients=recipients, sender=sender)
     msg.body = text_body
     msg.html = html_body
-    @copy_current_request_context
-    def send(msg):
-        mail.send(msg)
-    thr = Thread(target=send, args=[msg])
-    thr.start()
+    send.delay(msg)
+
+
+@celery.task
+def send(msg):
+    mail.send(msg)
 
 
 def send_confirm_email(user, token):

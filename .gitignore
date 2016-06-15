@@ -63,3 +63,6 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 app/crawler/ign_spider.py
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir

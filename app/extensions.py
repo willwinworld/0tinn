@@ -6,7 +6,7 @@ from flask_moment import Moment
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_mail import Mail
-
+from celery import Celery
 
 bootstrap = Bootstrap()
 
@@ -22,3 +22,4 @@ mail = Mail()
 
 redis_store = redis.StrictRedis("localhost", 6379, 0)
 
+celery = Celery('0Tinn')

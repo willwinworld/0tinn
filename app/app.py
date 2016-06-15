@@ -14,6 +14,16 @@ from flaskext.markdown import Markdown
 def create_app():
     app = Flask(__name__)
     app.config.from_object('app.config.config')
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
     Markdown(app)
     register_extensions(app)
     register_bprint(app)

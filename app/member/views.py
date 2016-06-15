@@ -47,12 +47,9 @@ def signup():
     form = SignupForm()
     if form.validate_on_submit():
         user = form.save()
-        try:
-            send_confirm_email(user, user.set_token())
-        except:
-            print('send email failed!')
+        send_confirm_email(user, user.set_token())
         login_user(user)
-        flash('Sign up success, do not to your email to check mail', 'success')
+        flash('Sign up success, do not forget to your mail-box to checking mail', 'success')
         return redirect("/")
     return render_template('user/signup.html', form=form)
 

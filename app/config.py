@@ -1,5 +1,8 @@
 # -*- coding:utf-8 -*-
+from __future__ import absolute_import
+
 import os
+from celery.schedules import crontab
 
 
 class config():
@@ -23,3 +26,26 @@ class config():
     # RECAPTCHA
     RECAPTCHA_PUBLIC_KEY = '6LcAViETAAAAANLFKQmDl1DtQL_jwa1rMJuoDJVw'
     RECAPTCHA_PRIVATE_KEY = "6LcAViETAAAAAAxdSV7x0qe7ylvPNgp_lgDS1QEX"
+
+    #Celery
+    CELERY_TIMEZONE = 'Asia/Shanghai'
+    BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+    CELERY_IMPORTS = ('app.crawler.dualshockers', 'app.crawler.gnews_crawler', 'app.crawler.wccftech_spider')
+    CELERYBEAT_SCHEDULE = {
+        'dualshockers-every-3-hour': {
+            'task': 'app.crawler.dualshockers.deal_cells',
+            'schedule': crontab(minute=0, hour='*/3'),
+            'args': ()
+        },
+        'pcgamer-every-3-hour': {
+            'task': 'app.crawler.gnews_crawler.deal_cells',
+            'schedule': crontab(minute=0, hour='*/3'),
+            'args': ()
+        },
+        'wccftech-every-3-hour': {
+            'task': 'app.crawler.wccftech_spider.deal_cells',
+            'schedule': crontab(minute=0, hour='*/3'),
+            'args': ()
+        },
+    }
