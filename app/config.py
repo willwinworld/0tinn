@@ -31,19 +31,20 @@ class config():
     BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_IMPORTS = ('app.crawler.dualshockers', 'app.crawler.gnews_crawler', 'app.crawler.wccftech_spider')
+    CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
     CELERYBEAT_SCHEDULE = {
         'dualshockers-every-3-hour': {
-            'task': 'app.crawler.dualshockers.deal_cells',
+            'task': 'app.crawler.dualshockers.run',
             'schedule': crontab(minute=0, hour='*/3'),
             'args': ()
         },
         'pcgamer-every-3-hour': {
-            'task': 'app.crawler.gnews_crawler.deal_cells',
+            'task': 'app.crawler.gnews_crawler.run',
             'schedule': crontab(minute=0, hour='*/3'),
             'args': ()
         },
         'wccftech-every-3-hour': {
-            'task': 'app.crawler.wccftech_spider.deal_cells',
+            'task': 'app.crawler.wccftech_spider.run',
             'schedule': crontab(minute=0, hour='*/3'),
             'args': ()
         },

@@ -39,6 +39,7 @@ def gnews_save(t, s, ct, p):
         except:
             return False
 
+@celery.task
 def run():
     dualshockers_url = 'http://www.dualshockers.com'
     print("正在链接:" + dualshockers_url)

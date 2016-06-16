@@ -46,6 +46,8 @@ def gnews_save(t, s, ct, p):
         except:
             return False
 
+
+@celery.task
 def run():
        wccftech_url = 'http://wccftech.com/topic/games/page/1'
        print("正在链接:" + wccftech_url)

@@ -48,6 +48,8 @@ def gnews_save(t, s, ct, p):
         except:
             return False
 
+
+@celery.task
 def run():
     pcgamer_url = 'http://www.pcgamer.com/news/page/1/'
     print("正在链接:" + pcgamer_url)
