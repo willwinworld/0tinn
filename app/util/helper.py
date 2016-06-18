@@ -3,9 +3,9 @@ import json
 import requests
 import re
 import time
+import arrow
 from bs4 import BeautifulSoup
 from math import log2
-from datetime import datetime, timedelta
 from app.extensions import redis_store
 
 
@@ -68,9 +68,7 @@ class Tietuku():
 
 def now_time():
     # 格式化时间
-    td = timedelta(hours=8)
-    t = datetime.utcnow() + td
-    return t
+    return arrow.utcnow().format('YYYY-MM-DD HH:mm:ss')
 
 
 def check_in_time_format(t):
