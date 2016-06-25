@@ -25,10 +25,10 @@
             <a href="/g/{{ i.title }}" class="list-group-item">
                 <div class="media">
                     <div class="media-left">
-                        <img class="media-object" src="{{ i.pic }}" style="width: 250px; height: 140px">
+                        <img class="media-object hidden-xs hidden-sm" src="{{ i.pic }}" style="width: 250px; height: 140px">
                     </div>
                     <div class="media-body"><h4 class="media-heading">{{ i.title }}</h4>
-                        <p>{{ moment(i.date_created, local=True).fromNow() }}</p>{{ i.sentence }}
+                        <p class="text-muted">{{ moment(i.date_created).format("dddd, MMMM Do YYYY") }}</p>{{ i.sentence }}
                     </div>
                 </div>
             </a>
