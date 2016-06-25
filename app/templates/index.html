@@ -517,7 +517,7 @@ var _hmt = _hmt || [];
                                     <div class="text-center">
                                         <a href="/signup"><button class="btn btn-default">Join us</button> </a>
                                         <p></p>
-                                        <p>or you want to <a href="/login">sign in</a> </p>
+                                        <p>or you want to <a href="/login">login in</a> </p>
                                     </div>
                                 </div>
                             </div>
@@ -562,22 +562,10 @@ var _hmt = _hmt || [];
 
 						<!-- Latest Comments -->
 						<div class="latest-comments mtt30">
-							<div class="section-title">
-								<h3> <span class="cat-icon"><i class="fa fa-comment-o"></i></span>Recent Comments</h3>
-							</div> <!-- //section-title -->
-                            {% for i in get_value("recent_reply") %}
-							<div class="latest-comment">
-								<p>"{{ i.content }}"</p>
-								<div class="media">
-									<div class="media-left latest-comments-image">
-										<img src="{{ i.get_user().avatar }}" alt="comment" style="height:30px"
-									</div>
-									<div class="latest-comment-wrap media-body">
-										<span class="latest-comments-user">{{ i.username }}</span><span class="latest-comments-date">{{ moment(i.date_created).format("MMMM Do YYYY") }}</span>
-									</div>
-								</div>
-							</div>
-                            {% endfor %}
+                            <div id="recentcomments" class="dsq-widget">
+                            <h2 class="dsq-widget-title">Recent Comments</h2>
+                            <script type="text/javascript" src="http://0tinn.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200&hide_mods=0"></script>
+                            </div>
 						</div> <!-- //Latest Comments -->
 
 					</div> <!-- //col-sm-3 -->
@@ -709,4 +697,5 @@ var _hmt = _hmt || [];
                 })
             }
     </script>
+    <script id="dsq-count-scr" src="//EXAMPLE.disqus.com/count.js" async></script>
 {% endblock %}

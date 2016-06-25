@@ -41,7 +41,7 @@
                     <i class="fa fa-comments-o"></i>
                     <div class="post-meta-info-list-in comments-in">
                       <p>Comments</p>
-                      <a href="#"><span class="leave-reply">{{ replies | length }}</span></a>
+                      <a href="http://0tinn.com/{{ news.title }}#disqus_thread" data-disqus-identifier={{ news.id }}></a>
                     </div>
                   </div>
                   <div class="post-meta-info-list category">
@@ -201,50 +201,27 @@
 {#           </div> <!-- //row -->#}
 
            <div class="row">
-             <!-- previous comments -->
-             <div class="col-sm-12">
-              <div class="comments-content mtt60">
-                    <ul class="list-group reply-list">
-                        <li class="list-group-item reply-header small">
-                            <strong>{{ replies | length }} Reply<strong></strong>
-                            </strong>
-                        </li>
-                        {% for i in replies %}
-                            <li class="list-group-item reply">
-                                <div class="media">
-                                  <div class="media-left">
-                                    <a href="/member/{{ i.username }}">
-                                     <img class="media-object" src="{{ i.get_user().avatar }}" data-holder-rendered="true" style="width: 48px; height: 48px;">
-                                    </a>
-                                  </div>
-                                    <div class="media-body">
-                                        <span>
-                                            <strong id="username">{{ i.username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ moment(i.date_created, local=True).fromNow() }}</span>
-                                        </span>
-                                        <p>
-                                        {{ i.content | safe }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </li>
-                            {% endfor %}
-                    </ul>
-              </div>
-            </div> <!-- //previous comments -->
-           <div class="comments-form col-sm-12">
-              <div class="section-title">
-               <h3> <span class="cat-icon"><i class="fa fa-commenting"></i></span>Leave a comment</h3>
-             </div>
-             <div class="contact-form leave-message">
-               <form id="main-contact-form" >
-                   {{ form.hidden_tag() }}
-                 <div class="form-group input-textarea">
-                   {{ form.content(class="form-control",style="overflow: hidden;resize: vertical; word-wrap: break-word; width: 100%;",maxlength='10000') }}
-                 </div>
-                 <button type="submit" class="btn btn-success" onclick="post_reply()">Send Message</button>
-               </form>
-             </div>
-            </div>
+           <div class="col-sm-12">
+               <div id="disqus_thread"></div>
+                <script>
+                    /**
+                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+                     */
+
+                    var disqus_config = function () {
+                        this.page.url = "http://0tinn.com/" + "{{ news.title }}";  // Replace PAGE_URL with your page's canonical URL variable
+                        this.page.identifier = "{{ news.id }}"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                    };
+                    (function() {  // DON'T EDIT BELOW THIS LINE
+                        var d = document, s = d.createElement('script');
+                        s.src = '//0tinn.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+                   </div>
            </div> <!-- //row -->
           </div> <!-- //col-sm-9 -->
         </div> <!-- //row -->
