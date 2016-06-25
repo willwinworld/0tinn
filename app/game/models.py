@@ -102,56 +102,6 @@ class Gaming_strategy(db.Model):
         redis_store.set("g_strategy_hot", id)
 
 
-class Gnews_Reply(db.Model):
-    __tablename__ = "g_reply"
-    id = db.Column(db.Integer, primary_key=True)
-    news_id = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    username = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=now_time())
-    content = db.Column(db.Text, nullable=False)
-
-    def __repr__(self):
-        return "<{}.{}>".format(self.__class__.__name__, self.id)
-
-    def __init__(self, id, u_id, name, content):
-        self.news_id = id
-        self.user_id = u_id
-        self.username = name
-        self.content = content
-
-    def save(self):
-        news = Game_News.query.get(self.news_id)
-        l_user = is_discuss(self.content)
-        if l_user is not None:
-            for u in l_user:
-                user = Member.query.filter_by(username=u).first()
-                if user:
-                    t = "<a href='/member/" + u + "'>" + u + "</a>"
-                    self.content = self.content.replace(u, t)
-                    msg_ct = self.username + "In" + "\"" + news.title + "\" someone is @ you"
-                    msg = Message(user.id, self.user_id, None, msg_ct)
-                    msg.save()
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def get_user(self):
-        u = Member.query.get(self.user_id)
-        return u
-
-    @classmethod
-    def get(cls, nid):
-        return cls.query.filter_by(news_id=nid).all()
-
-    @classmethod
-    def get_index(cls):
-        return cls.query.order_by(cls.date_created.desc()).limit(3)
-
-
 class Popular_games(db.Model):
     __tablename__ = "popular_game"
     id = db.Column(db.Integer, primary_key=True)

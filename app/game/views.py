@@ -2,8 +2,8 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from flask_login import current_user, login_required
 from app.util.decorate import admin_must
-from .models import Game_News, Gnews_Reply
-from .forms import GnewsReplyForm, Game_news
+from .models import Game_News
+from .forms import Game_news
 
 gnews = Blueprint("gnews", __name__)
 
@@ -26,9 +26,7 @@ def index():
 def detail(title):
     news = Game_News.query.filter_by(title=title).first_or_404()
     news.add_views()
-    replies = Gnews_Reply.get(news.id)
-    form = GnewsReplyForm()
-    return render_template("game/detail.html", news=news, replies=replies, form=form)
+    return render_template("game/detail.html", news=news)
 
 
 @gnews.route("/g/post", methods=["GET", "POST"])
@@ -60,20 +58,6 @@ def handle_ajax():
             if action == "set_hot":
                 if current_user.username == "Tallone":
                     Game_News.set_hot(id)
-            elif action == "post_reply":
-                reply_content = request.args.get("content")
-                # 对评论内容做判断
-                if reply_content == "":
-                    return jsonify(info="content is none")
-                else:
-                    uname = current_user.username
-                    uid = current_user.id
-                    rep = Gnews_Reply(id=id, u_id=uid,name=uname,content=reply_content)
-                    try:
-                        rep.save()
-                        return jsonify(info="success")
-                    except:
-                        return jsonify(info="failed")
             elif action == "delete":
                 if current_user.username == "Tallone":
                     gn = Game_News.query.get(id)

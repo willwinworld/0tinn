@@ -7,7 +7,7 @@ app = create_app()
 manager = Manager(app)
 
 from app.member.forms import LoginForm
-from app.game.models import Popular_games, Gnews_Reply
+from app.game.models import Popular_games
 
 
 # Some Information
@@ -19,8 +19,6 @@ def utility_processor():
             return Popular_games.get_topgame()
         elif s == "upcoming":
             return Popular_games.get_upcoming()
-        elif s == "recent_reply":
-            return Gnews_Reply.get_index()
     return dict(get_value=info)
 
 

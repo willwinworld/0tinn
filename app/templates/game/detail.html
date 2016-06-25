@@ -228,35 +228,3 @@
       </div> <!-- //container -->
     </section>
 {% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script>
-        $(document).ready(function(){
-            $('textarea').focus(function(){
-                {% if not current_user.is_authenticated %}
-                    alert("Login first");
-                    $("textarea").blur();
-                {% endif %}
-            })
-        });
-    function post_reply(){
-        $.ajax({
-            url: "/g/handle_ajax",
-            type: "GET",
-            data: {"tab":"gnews", "action":"post_reply", "id":"{{ news.id }}", "content": $("#content").val()},
-            success: function(){
-                location.reload()
-            }
-        })
-    }
-    {% if current_user.is_authenticated %}
-        var $button = $("<div id='reply-button' class='btn btn-xs'><i class='fa fa-reply btn-success' aria-hidden='true'></i></div>").click(function(){
-            var m = $(this).prev().find("#username").text();
-            $("#content").focus().text("@" + m + " ");
-        });
-        $(".reply").hover(function(){ $(this).append($button);
-            $button.show();
-        }, function(){ $button.hide();  });  {% endif %}
-    </script>
-{% endblock %}

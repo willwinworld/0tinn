@@ -4,7 +4,6 @@ import requests
 import re
 import time
 import arrow
-from bs4 import BeautifulSoup
 from math import log2
 from app.extensions import redis_store
 

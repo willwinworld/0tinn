@@ -9,6 +9,3 @@ class Game_news(Form):
     content = TextAreaField("内容")
     pic = StringField("展示图")
     submit = SubmitField("保存")
-
-class GnewsReplyForm(Form):
-    content = TextAreaField("Submit")
