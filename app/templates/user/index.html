@@ -61,7 +61,7 @@
                                 {% if replies %}
                                     {% for r in replies %}
                                         <li class="list-group-item">
-                                            <div class="pull-right">{{ moment(r.date_created, local=True).fromNow() }}</div>
+                                            <div class="pull-right">{{ moment(r.date_created).fromNow() }}</div>
                                             <h6 class="list-group-item-heading">{{ r.content | safe }}</h6>
                                         <p class="list-group-item-text">Reply<a href="/member/{{ r.get_topic().username }}">{{ r.get_topic().username }}</a> Created
                                             <a href="/topic/{{ r.topic_id }}">"{{ r.get_topic().title }}"</a>topic</p>
@@ -95,9 +95,9 @@
                 <div class="panel panel-default">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#collect-article" data-toggle="tab" aria-expanded="true">Subscribed Threads</a></li>
-                        <li class=""><a href="#following" data-toggle="tab" aria-expanded="false">{% if current_user.is_authenticated and current_user.username == user.username %}Me{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}His{% else %}Her{% endif %}Interested person</a></li>
+                        <li class=""><a href="#following" data-toggle="tab" aria-expanded="false">Interested person</a></li>
                         <li class=""><a href="#follower" data-toggle="tab" aria-expanded="false">
-Concerned{% if current_user.is_authenticated and current_user.username == user.username %}me{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}he{% else %}she{% endif %} person
+Concerned person
                         </a></li>
                     </ul>
                      <div id="myTabContent" class="tab-content">
@@ -215,8 +215,8 @@ Concerned{% if current_user.is_authenticated and current_user.username == user.u
                               <tbody>
                                 <tr>
                                     <td width="33%" align="center"><h5>{{ user.collect_topic_num }}</h5><span class="text-muted">Subscribed Threads</span></td>
-                                    <td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><h5>{{ user.following_num }}</h5><span class="text-muted">{% if current_user.is_authenticated and current_user.username == user.username %}我{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}他{% else %}她{% endif %}Interested person</span></td>
-                                    <td width="33%" align="center"><h5>{{ user.follower_num }}</h5><span class="text-muted">Concerned {% if current_user.is_authenticated and current_user.username == user.username %}我{% elif user.gender == "genderless" %}TA{% elif user.gender == "mars" %}他{% else %}她{% endif %} persion</span></td>
+                                    <td width="34%" style="border-left: 1px solid rgba(100, 100, 100, 0.4); border-right: 1px solid rgba(100, 100, 100, 0.4);" align="center"><h5>{{ user.following_num }}</h5><span class="text-muted">Interested person</span></td>
+                                    <td width="33%" align="center"><h5>{{ user.follower_num }}</h5><span class="text-muted">Concerned persion</span></td>
                                 </tr>
                             </tbody>
                           </table>
