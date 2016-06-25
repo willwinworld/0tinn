@@ -51,7 +51,7 @@ def gnews_save(t, s, ct, p):
 
 @celery.task
 def run():
-    pcgamer_url = 'http://www.pcgamer.com/news/page/1/'
+    pcgamer_url = 'http://www.pcgamer.com/news'
     print("正在链接:" + pcgamer_url)
     resp = requests.get(pcgamer_url, headers=pcgame_header, timeout=time_out)
     print("链接完成")
@@ -76,3 +76,4 @@ def run():
         over = gnews_save(t, st, ct, pic)
         if not over:
          break
+
