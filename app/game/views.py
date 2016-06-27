@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, abort
 from flask_login import current_user, login_required
 from app.util.decorate import admin_must
 from .models import Game_News
@@ -17,7 +17,7 @@ def index():
         elif int(page) < 1:
             page = 1
         elif int(page) > 100:
-            return 404
+            abort(404)
         news = Game_News.get(int(page))
     return render_template("game/index.html", news=news)
 
