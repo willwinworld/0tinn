@@ -1,0 +1,15 @@
+{% extends "game/index.html" %}
+
+{% block main %}
+    <div class="row">
+          <div class="col-sm-3 col-sm-offset-1">
+             <img src="{{ url_for('static', filename='image/error-logo-left.png') }}" class="img-responsive error-img" alt="404">
+           </div>
+           <div class="col-sm-7">
+             <p class="title">500</p>
+             <h2 class="mtb20">
+               Error! We're sorry, but there have an internal server<br> error.
+             </h2>
+           </div> <!-- //col-sm-12 -->
+        </div>
+{% endblock %}

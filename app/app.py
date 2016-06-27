@@ -55,3 +55,4 @@ def register_bprint(app):
     app.register_blueprint(adm)
     app.register_blueprint(gnews)
     app.register_blueprint(index)
+

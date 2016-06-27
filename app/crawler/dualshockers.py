@@ -51,7 +51,7 @@ def run():
         print("开始获取信息")
         s = BeautifulSoup(str(c), "html.parser")
         t = s.find("h2").text
-        t = t.replace("/", "|")
+        t = t.replace("/", " ")
         t = t.replace("&", "and")
         t = t.replace("?", " ")
         st = s.find("p").text

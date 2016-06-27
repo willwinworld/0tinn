@@ -60,7 +60,7 @@ def run():
            s = BeautifulSoup(str(c), "html.parser")
            p = s.find("img")["src"]
            t = s.find("h2").text
-           t = t.replace("/", "|")
+           t = t.replace("/", " ")
            t = t.replace("&", "and")
            t = t.replace("?", " ")
            st = list(s.strings)[-1].strip()
