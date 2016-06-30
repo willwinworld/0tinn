@@ -28,7 +28,6 @@ def get_content(n):
 
 
 def gnews_save(t, s, ct, p):
-    print(type(t), type(s), type(ct), type(p))
     gnews = Game_News(t, s, ct, p)
     print("尝试存储")
     with app.app_context():
