@@ -3,7 +3,6 @@ import requests
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
-from app.util.helper import up_avatar
 from app.extensions import celery
 
 
@@ -14,14 +13,6 @@ wccftech_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0
           "Host":"wccftech.com","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
           }
 time_out = 20
-
-
-def upload_pic(url):
-        res = up_avatar(url)
-        if 'info' in res:
-            return False
-        else:
-            return res['linkurl']
 
 
 def get_content(n):
@@ -66,11 +57,6 @@ def run():
            st = list(s.strings)[-1].strip()
            n_url = s.find("a")['href']
            ct, p = get_content(n_url)
-           pic = upload_pic(p)
-           print('获取信息完成，正在尝试上传图片')
-           if not pic:
-               pic = p
-               print('上传失败')
-           over = gnews_save(t, st, ct, pic)
+           over = gnews_save(t, st, ct, p)
            if not over:
              break

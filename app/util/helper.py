@@ -46,25 +46,6 @@ def highest_online_number():
     return int(redis_store.get("Highest_online_number"))
 
 
-class Tietuku():
-    def __init__(self, token):
-        self.token = token
-
-    def upload(self, path):
-        url = 'http://up.imgapi.com/'
-        data = {'Token': self.token}
-
-        try:
-            with open(path, 'rb') as f:
-                r = requests.post(url, data, files={'file': f})
-        except OSError:
-            data['fileurl'] = path
-            r = requests.post(url, data)
-
-        obj = json.loads(r.text)
-        return obj
-
-
 def now_time():
     # 格式化时间
     return arrow.utcnow().format('YYYY-MM-DD HH:mm:ss')
@@ -73,13 +54,6 @@ def now_time():
 def check_in_time_format(t):
     # 签到的时间格式
     return t.strftime("%y%m%d")
-
-
-def up_avatar(url):
-    t = Tietuku(
-        "423eca86c8fc66f7bf71c07e3cd2f1b5907baec1:QU00WXoxaWdmSWEyTVZ0UGtzallPMmh0dGlvPQ==:eyJkZWFkbGluZSI6MTQ2MjAyNTc0NiwiYWN0aW9uIjoiZ2V0IiwidWlkIjoiNTYzNjcwIiwiYWlkIjoiMTIxNzc3MiIsImZyb20iOiJ3ZWIifQ==")
-    res = t.upload(url)
-    return res
 
 
 def is_discuss(s):

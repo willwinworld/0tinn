@@ -3,18 +3,9 @@ import requests
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
-from app.util.helper import up_avatar
 from app.extensions import celery
 
 time_out = 20
-
-
-def upload_pic(url):
-        res = up_avatar(url)
-        if 'info' in res:
-            return False
-        else:
-            return res['linkurl']
 
 
 def get_content(n):
@@ -56,11 +47,6 @@ def run():
         st = s.find("p").text
         n_url = s.find("a")['href']
         ct, p = get_content(n_url)
-        print('获取信息完成，正在尝试上传图片')
-        pic = upload_pic(p)
-        if not pic:
-            pic = p
-            print('上传失败')
-        over = gnews_save(t, st, ct, pic)
+        over = gnews_save(t, st, ct, p)
         if not over:
          break

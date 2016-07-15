@@ -3,7 +3,6 @@ import requests
 from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
-from app.util.helper import up_avatar
 from app.extensions import celery
 
 pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -18,14 +17,6 @@ print("Try connect pcgamer.....")
 
 def n_filter(tag):
     return tag.has_attr("data-page") and "listingResult" in tag["class"]
-
-
-def upload_pic(url):
-        res = up_avatar(url)
-        if 'info' in res:
-            return False
-        else:
-            return res['linkurl']
 
 
 def get_content(n):
@@ -61,10 +52,6 @@ def run():
         print("开始获取信息")
         s = BeautifulSoup(str(c), "html.parser")
         p = s.find("figure")["data-original"]
-        print("正在尝试上传图片")
-        pic = upload_pic(p)
-        if not pic:
-            pic = p
         t = s.find("h3", class_="article-name").text
         t = t.replace("/", " ")
         t = t.replace("&", "and")
@@ -73,7 +60,7 @@ def run():
         n_url = s.find("a")['href']
         ct = get_content(n_url)
         print('获取信息完成')
-        over = gnews_save(t, st, ct, pic)
+        over = gnews_save(t, st, ct, p)
         if not over:
          break
 
