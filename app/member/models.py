@@ -8,7 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.extensions import db, redis_store
-from app.util.helper import now_time, up_avatar, check_in_time_format
+from app.util.helper import now_time, check_in_time_format
 
 
 class Member(db.Model, UserMixin):
@@ -97,14 +97,6 @@ class Member(db.Model, UserMixin):
         url = 'https://cdn.v2ex.com/gravatar'
         hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
         return "{}/{}?d={}".format(url, hash, default)
-
-    def set_avatar(self, url):
-        res = up_avatar(url)
-        if 'info' in res:
-            return False, res['info']
-        else:
-            self.avatar = res['s_url']
-            return True, "保存成功"
 
     def collect_topic(self, topic_id):
         if not redis_store.sismember("user_like_topics:{}".format(self.id), topic_id):

@@ -12,12 +12,13 @@ gnews = Blueprint("gnews", __name__)
 def index():
     if request.method == "GET":
         page = request.args.get("p")
+        max_page = Game_News.query.count()
         if page is None:
             page = 1
         elif int(page) < 1:
             page = 1
-        elif int(page) > 100:
-            abort(404)
+        elif int(page) > max_page:
+            page = max_page
         news = Game_News.get(int(page))
     return render_template("game/index.html", news=news)
 
