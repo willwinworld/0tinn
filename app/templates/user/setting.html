@@ -52,31 +52,32 @@
                     {% endif %}
                 </div>
             </div>
-        <div class="form-group">
-            <div class="col-lg-2 control-label">Current Avatar</div>
-            <div class="col-lg-10 control">
-                <div >
-                    <img src="{{ current_user.avatar }}" style="width: 73px; height: 73px">
-                </div>
-            </div>
-        </div>
-            <div class="form-group">
-                {{ form.avatar.label(class='control-label col-lg-2') }}
-                <div class="col-lg-10">
-                    {{ form.avatar(class='form-control', placeholder='Image url here') }}
-                </div>
-                {% if form.avatar.errors %}
-                    {% for error in form.avatar.errors %}
-                        <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>
-                    {% endfor %}
-                {% endif %}
-                <div class="col-lg-offset-2 col-lg-10 text-muted">
-                    <p>Rules on Avatar</p>
-                    <ul >
-                        <li>DO NOT use any vulgar or sensitive image as an avatar</li>
-                        <li>If you are a man, a woman, do not use the photo as avatar</li>
-                    </ul>
-                </div>
+{#        <div class="form-group">#}
+{#            <div class="col-lg-2 control-label">Current Avatar</div>#}
+{#            <div class="col-lg-10 control">#}
+{#                <div >#}
+{#                    <img src="{{ current_user.avatar }}" style="width: 73px; height: 73px">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#            <div class="form-group">#}
+{#                {{ form.avatar.label(class='control-label col-lg-2') }}#}
+{#                <div class="col-lg-10">#}
+{#                    {{ form.avatar(class='form-control', placeholder='Image url here') }}#}
+{#                </div>#}
+{#                {% if form.avatar.errors %}#}
+{#                    {% for error in form.avatar.errors %}#}
+{#                        <div class="col-lg-10 col-lg-offset-2 text-danger "> {{ error }}</div>#}
+{#                    {% endfor %}#}
+{#                {% endif %}#}
+{#                <div class="col-lg-offset-2 col-lg-10 text-muted">#}
+{#                    <p>Rules on Avatar</p>#}
+{#                    <ul >#}
+{#                        <li>DO NOT use any vulgar or sensitive image as an avatar</li>#}
+{#                        <li>If you are a man, a woman, do not use the photo as avatar</li>#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
         <div class="form-group ">
             <div class="col-lg-offset-2 col-lg-10">
                 {{ form.submit(class='btn btn-default') }}
