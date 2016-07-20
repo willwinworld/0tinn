@@ -70,11 +70,11 @@
     {% endwith %}
     <div class="container-fluid">
             <div class="row">
-                <div class="col-md-7 col-md-offset-1">
+                <div class="col-md-7 col-md-offset-1 col-xs-12 col-sm-9">
                 {% block main -%}{%- endblock %}
                 </div>
                 <!-- Side bar -->
-                <div class="col-md-3">
+                <div class="col-md-3 hidden-xs col-sm-3">
                 <div class="sep20"></div><div class="sep20"></div>
                 {% if current_user.is_authenticated %}
                  <div class="panel panel-default">
