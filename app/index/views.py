@@ -19,5 +19,4 @@ def main():
         session['following_nums'] = current_user.following_num
     session['online_nums'] = get_online_user_nums()
     session["highest_online_num"] = highest_online_number()
-    return render_template("index.html", hot_news=hot_news, news_index=news_index,
-                           news=news)
+    return render_template("index.html", hot_news=hot_news, news_index=news_index, news=news)

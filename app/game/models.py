@@ -1,10 +1,7 @@
 # -*- coding:utf-8 -*-
 from app.extensions import db
 from app.util.helper import now_time
-from app.extensions import redis_store
-from app.member.models import Member
-from app.message.models import Message
-from app.util.helper import is_discuss
+from app.extensions import redis_store, cache
 
 
 class Game_News(db.Model):
@@ -43,6 +40,7 @@ class Game_News(db.Model):
         return cls.query.order_by(cls.id.desc()).paginate(page, 30, False)
 
     @classmethod
+    @cache.cached(timeout=7200, key_prefix='index_news')
     def get_index(cls):
         return cls.query.order_by(cls.date_created.desc()).limit(8)
 
@@ -111,11 +109,13 @@ class Popular_games(db.Model):
     rank = db.Column(db.Integer)
 
     @classmethod
+    @cache.cached(timeout=7200, key_prefix='topGame')
     def get_topgame(cls):
         games = cls.query.filter_by(label="topgame").all()
         return games
 
     @classmethod
+    @cache.cached(timeout=7200, key_prefix='upcomingGame')
     def get_upcoming(cls):
         games = cls.query.filter_by(label="upcoming").order_by(cls.rank).all()
         return games
