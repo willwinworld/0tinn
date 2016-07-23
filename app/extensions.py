@@ -7,6 +7,7 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_mail import Mail
 from flask_cache import Cache
+from flask_migrate import Migrate
 from celery import Celery
 
 bootstrap = Bootstrap()
@@ -26,3 +27,5 @@ redis_store = redis.StrictRedis("localhost", 6379, 0)
 celery = Celery('0Tinn')
 
 cache = Cache(config={'CACHE_TYPE': 'redis'})
+
+migrate = Migrate()
