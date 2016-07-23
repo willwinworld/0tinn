@@ -45,7 +45,6 @@ def register_extensions(app):
         else:
             return None
     login_manager.init_app(app)
-    cache.init_app(app)
     migrate.init_app(app, db)
 
 

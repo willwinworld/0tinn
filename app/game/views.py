@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from flask_login import current_user, login_required
 from app.util.decorate import admin_must
+from app.util.cache import cached
 from .models import Game_News
 from .forms import Game_news
 
@@ -24,6 +25,7 @@ def index():
 
 
 @gnews.route('/g/<string:title>', methods=['GET', 'POST'])
+@cached(key_name=request.path)
 def detail(title):
     news = Game_News.query.filter_by(title=title).first_or_404()
     news.add_views()
