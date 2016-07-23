@@ -25,7 +25,6 @@ def index():
 
 
 @gnews.route('/g/<string:title>', methods=['GET', 'POST'])
-@cached(key_name=request.path)
 def detail(title):
     news = Game_News.query.filter_by(title=title).first_or_404()
     news.add_views()
