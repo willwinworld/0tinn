@@ -55,7 +55,7 @@
                     <i class="fa fa-calendar-o"></i>
                     <div class="post-meta-info-list-in date-in">
                       <p>Date</p>
-                      <time class="entry-date">{{ moment(news.date_created).format("dddd, MMMM Do YYYY") }}</time>
+                      <time class="entry-date">{{ news.date_created | custom_date }}</time>
                     </div>
                   </div>
                 </div> <!-- //post-meta-info -->

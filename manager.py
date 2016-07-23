@@ -40,4 +40,4 @@ def drop_db():
     db.drop_all()
 
 if __name__ == '__main__' :
-    manager.run()
+    app.run('0.0.0.0')

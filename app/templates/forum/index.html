@@ -54,8 +54,7 @@
                                           <span class="badge">{{ topic.reply_num }}</span>
                                       </div>
                                   </div>
-                              </li>
-                              {% endfor %}
+                                  {% endfor %}
                             <li class="list-group-item cell"><i class="fa fa-angle-double-right"></i> <a href="/{{ tab }}">More about</a></li>
             </ul>
     </div>
@@ -71,6 +70,7 @@
             {% if hot_topics[0] != none %}
               {% for t in hot_topics %}
                   <tbody>
+                      {% if t != none %}   
                     <tr>
                         <td width="5%">
                             <a href="/member/{{ t.get_user().username }}">
@@ -81,6 +81,7 @@
                             <a href="/topic/{{ t.id }}">{{ t.title }}</a>
                         </td>
                     </tr>
+                    {% endif %}
                   </tbody>
               {% endfor %}
             {% endif %}

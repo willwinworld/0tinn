@@ -56,6 +56,7 @@ class Topic(db.Model):
             redis_store.zadd("Hot_topics", score, t.id)
         for i in redis_store.zrevrange("Hot_topics", 0, 6):
             x.append(cls.query.get(int(i)))
+        print(x)
         return x
 
     @staticmethod

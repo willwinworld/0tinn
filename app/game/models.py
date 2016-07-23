@@ -11,7 +11,7 @@ class Game_News(db.Model):
     pic = db.Column(db.String(200), nullable=False)
     sentence = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date_created = db.Column(db.String(20), default=str(now_time()))
+    date_created = db.Column(db.String(20), default=now_time())
     views = db.Column(db.Integer, default=1)
 
     def __repr__(self):
@@ -40,7 +40,7 @@ class Game_News(db.Model):
         return cls.query.order_by(cls.id.desc()).paginate(page, 30, False)
 
     @classmethod
-    @cache.cached(timeout=7200, key_prefix='index_news')
+#    @cache.cached(timeout=7200, key_prefix='index_news')
     def get_index(cls):
         return cls.query.order_by(cls.date_created.desc()).limit(8)
 
