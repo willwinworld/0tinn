@@ -13,8 +13,6 @@ def cached(timeout=60, key_name=None):
             if rv is None:
                 rv = f(*args, **kwargs)
                 redis_cache.set(key=key_name, value=rv, timeout=timeout)
-            else:
-                print('Get from cache:', key_name)
             return rv
         return wrap_f
     return real_wrap
