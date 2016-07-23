@@ -1,4 +1,5 @@
 #   -*- coding:utf-8 -*-
+import arrow
 from flask_script import Manager
 from flask_migrate import MigrateCommand
 from app import create_app
@@ -7,6 +8,7 @@ from app.extensions import db
 app = create_app()
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
+
 
 from app.member.forms import LoginForm
 from app.game.models import Popular_games
@@ -30,6 +32,22 @@ def forms():
     return dict(login_form=login_form)
 
 
+# Custom filters
+def custom_date(t):
+    l = arrow.get(t, 'YYYY-MM-DD HH:mm:ss')
+    return l.format('MMM DD, YYYY')
+
+
+def humanize_date(t):
+    l = arrow.get(t, 'YYYY-MM-DD HH:mm:ss')
+    return l.humanize()
+
+
+env = app.jinja_env
+env.filters['custom_date'] = custom_date
+env.filters['humanize_date'] = humanize_date
+
+
 @manager.command
 def init_db():
     db.create_all()
@@ -40,4 +58,4 @@ def drop_db():
     db.drop_all()
 
 if __name__ == '__main__' :
-    app.run('0.0.0.0')
+    manager.run()

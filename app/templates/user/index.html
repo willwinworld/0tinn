@@ -61,7 +61,7 @@
                                 {% if replies %}
                                     {% for r in replies %}
                                         <li class="list-group-item">
-                                            <div class="pull-right">{{ moment(r.date_created).fromNow() }}</div>
+                                            <div class="pull-right">{{ r.date_created | humanize }}</div>
                                             <h6 class="list-group-item-heading">{{ r.content | safe }}</h6>
                                         <p class="list-group-item-text">Reply<a href="/member/{{ r.get_topic().username }}">{{ r.get_topic().username }}</a> Created
                                             <a href="/topic/{{ r.topic_id }}">"{{ r.get_topic().title }}"</a>topic</p>

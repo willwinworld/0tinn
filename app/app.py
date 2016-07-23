@@ -35,7 +35,6 @@ def register_extensions(app):
     bootstrap.init_app(app)
     pagedown.init_app(app)
     db.init_app(app)
-    moment.init_app(app)
     mail.init_app(app)
 
     @login_manager.user_loader

@@ -6,7 +6,7 @@ from celery.schedules import crontab
 
 
 class config():
-    DEBUG = True
+    DEBUG = False
     # BOOTSTRAP_SERVE_LOCAL = True
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:boxiao@localhost:3306/0tinn?charset=utf8'
     SQLALCHEMY_TRACK_MODIFICATIONS = False

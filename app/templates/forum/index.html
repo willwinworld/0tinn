@@ -44,7 +44,7 @@
                                             <p>
                                                 <span class="label label-primary">{{ topic.label }}</span>&nbsp; &hearts; &nbsp;
                                                 <strong>{{ topic.username }}</strong>&nbsp; &hearts; &nbsp;
-                                                <span class="text-muted">{{ moment(topic.date_created, local=True).fromNow() }}</span>&nbsp; &bull; &nbsp;
+                                                <span class="text-muted">{{ topic.date_created | humanize }}</span>&nbsp; &bull; &nbsp;
                                                 {% if topic.last_reply %}
                                                     <span class="text-muted">last reply from <strong>{{ topic.last_reply }}</strong></span>
                                                 {% endif %}

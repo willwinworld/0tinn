@@ -55,7 +55,7 @@
                       </div>
                         <div class="media-body">
                             <span>
-                                <strong id="username">{{ i.get_user().username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ moment(i.date_created, local=True).fromNow() }}</span>
+                                <strong id="username">{{ i.get_user().username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ i.date_created | humanize }}</span>
                             </span>
                             <p>
                             {{ i.content | safe }}
