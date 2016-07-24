@@ -17,7 +17,7 @@ class Topic(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
 #   少一次查询是一次
     username = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=now_time())
+    date_created = db.Column(db.String(20), default=now_time())
     vote = db.Column(db.Integer, default=0)
     click_rate = db.Column(db.Integer, default=1)
     last_reply = db.Column(db.String(200))
@@ -56,7 +56,6 @@ class Topic(db.Model):
             redis_store.zadd("Hot_topics", score, t.id)
         for i in redis_store.zrevrange("Hot_topics", 0, 6):
             x.append(cls.query.get(int(i)))
-        print(x)
         return x
 
     @staticmethod

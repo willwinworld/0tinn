@@ -55,7 +55,7 @@
                       </div>
                         <div class="media-body">
                             <span>
-                                <strong id="username">{{ i.get_user().username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ i.date_created | humanize }}</span>
+                                <strong id="username">{{ i.get_user().username }}</strong> <span class="text-muted">&nbsp;&nbsp;{{ i.date_created | humanize_date }}</span>
                             </span>
                             <p>
                             {{ i.content | safe }}
