@@ -4,6 +4,7 @@ from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.extensions import celery
+from app.util.imgur import upload
 
 pcgame_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 "Accept-Encoding":"gzip, deflate, sdch",
@@ -51,7 +52,8 @@ def run():
     for c in cells:
         print("开始获取信息")
         s = BeautifulSoup(str(c), "html.parser")
-        p = s.find("figure")["data-original"]
+        print("正在上传图片..")
+        p = upload(s.find("figure")["data-original"])
         t = s.find("h3", class_="article-name").text
         t = t.replace("/", " ")
         t = t.replace("&", "and")
@@ -62,5 +64,5 @@ def run():
         print('获取信息完成')
         over = gnews_save(t, st, ct, p)
         if not over:
-         break
+            break
 

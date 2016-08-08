@@ -4,6 +4,7 @@ from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.extensions import celery
+from app.util.imgur import upload
 
 
 wccftech_header = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -21,7 +22,8 @@ def get_content(n):
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("div", class_="body")
     source = text.find_all("p")[2:]
-    pic = text.find("img")["src"]
+    print("正在上传图片..")
+    pic = upload(text.find("img")["src"])
     ct = "".join(str(v) for v in source)
     return ct, pic
 

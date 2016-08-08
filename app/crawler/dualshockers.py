@@ -4,6 +4,7 @@ from manager import app
 from bs4 import BeautifulSoup
 from app.game.models import Game_News
 from app.extensions import celery
+from app.util.imgur import upload
 
 time_out = 20
 
@@ -13,7 +14,8 @@ def get_content(n):
     resp_n = requests.get(n, timeout=time_out)
     soup_n = BeautifulSoup(resp_n.content, "html.parser")
     text = soup_n.find("div", class_="post-alt")
-    pic = text.find("img")["src"]
+    print("正在上传图片..")
+    pic = upload(text.find("img")["src"])
     ct = str(text.find("div", class_="entry"))
     return ct, pic
 
@@ -28,6 +30,7 @@ def gnews_save(t, s, ct, p):
             return True
         except:
             return False
+
 
 @celery.task
 def run():
