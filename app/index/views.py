@@ -13,6 +13,10 @@ def main():
     hot_news = Game_News.get_hot()
     news_index = Game_News.get_index()
     news = Game_News.get(1).items
+    for n in news:
+        p = n.pic.split('.')
+        p[-2] += 'm'
+        n.pic = '.'.join(p)
     if current_user.is_authenticated:
         session['my_topic_num'] = Topic.get_user_topic_num(username=current_user.username)
         session['msg_num'] = Message.get_user_unread_num(current_user.id)
